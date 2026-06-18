@@ -1,0 +1,270 @@
+### Data modification
+
+**Fast track**: In this field, you will learn how police database guys maintain the database by using `UPDATE`, `INSERT`, `DELETE` keywords in multiple lines together, and how do they create and restore their database.  
+If you are familiar with the topic, read the story line, exercises and solutions only.
+
+> While Dick is just sitting in his room smoking and thinking, the database guys are busy with maintaining the
+> data. Whenever they receive a shoe size or a complete person data which was unknown, they update or insert
+> the relevant records.
+
+**Exercise 1**: Before doing any change on the database, make a backup of the database. This is a 
+saved copy of the database in a file, which can be used to restore (put back) the data which are in it at the moment of creation of the backup. Backups are often used to prepare for the worst case, when data is lost or corrupted.
+
+**Hints**:
+
+* Right click on the database you want to save, and click on Tasks -> Backup. Default settings are proper in most cases (full backup).
+
+<details>
+<summary>Solution</summary>
+<p>
+<img src="images/create-backup.png" alt="Back up option in SSMS"/>
+</p>
+</details>
+<br />
+
+<!-- blank line -->
+----
+<!-- blank line -->
+
+**Exercise 2**: Set the hair color of Kira Murray to Black in the person table, and check if you managed to update it.
+
+**Hints**:
+
+* The basic structure of an update query is:
+```sql
+ UPDATE tablename
+ SET columnname = newvalue
+ WHERE condition
+```
+* `WHERE` condition is especially important for updates: it works without conditions as well: updates all fields! Most of the time this is not what you want.
+* Format of the `WHERE` condition is the same as in a `SELECT`. 
+* In Basicland we go with the default *transaction* setting. It means that every query you run, takes effect immediately in the database, and cannot be reverted. This setting can be changed, but unnecessary for now.
+* See examples [here](https://wiki.topdesk.com/wiki/Example_codes_in_MS_SQL), or in Google.
+* To check it, use a select query with the same where condition.
+
+<details>
+<summary>Solution</summary>
+
+```sql
+UPDATE person
+SET hair = 'Black'
+WHERE first_name = 'Kira' AND last_name = 'Murray'
+
+SELECT * FROM person
+WHERE first_name = 'Kira' AND last_name = 'Murray'
+```
+</details>
+<br />
+
+<!-- blank line -->
+----
+<!-- blank line -->
+
+**Exercise 3a**: Hans Klein and Cindy Klein are a brother and a sister, and they changed 
+their last names to Kleiner. Database guys are sitting in front of their SQL Server Management Studio,
+and want to do the change in the database.
+
+In this exercise, do it in 3 steps, so that you see what's going on:
+
+1. write a query to get the ids of the 2 person records to update
+1. do the update
+1. check your work with another query
+
+**Hints**:
+
+* You can filter on uuid similar to how you filtered on any text.
+* You can use ```OR``` condition or ```IN``` as well: ```IN ('uuid1', 'uuid2')```.
+
+<details>
+<summary>Solution</summary>
+
+```sql
+SELECT * FROM person
+WHERE (first_name = 'Hans'
+OR first_name = 'Cindy') AND last_name = 'Klein'
+
+UPDATE person
+SET last_name = 'Kleiner'
+WHERE person_id IN ('398E6049-79CB-5B4E-9B36-E8C685E8543B', '73CFED84-EEF9-864F-BBC2-51D1A1C0B897')
+
+SELECT * FROM person
+WHERE person_id IN ('398E6049-79CB-5B4E-9B36-E8C685E8543B', '73CFED84-EEF9-864F-BBC2-51D1A1C0B897')
+```
+</details>
+<br />
+
+| **Note**    |
+| ----------- |
+|This is simple and safe, but not performing very well because of the separate queries. If the query gets into production environment, always keep performance in mind. See Exercise 3b.|
+
+**Exercise 3b**: Change the query on a way that it's better performance-wise, so it's suitable to be included in the detective application. 
+
+1. first, rename them manually back to Klein
+1. write a single query to do the update 
+
+<details>
+<summary>Rename to Klein</summary>
+
+```sql
+UPDATE person
+SET last_name = 'Klein'
+WHERE person_id IN ('398E6049-79CB-5B4E-9B36-E8C685E8543B', '73CFED84-EEF9-864F-BBC2-51D1A1C0B897')
+```
+</details>
+<br />
+
+<details>
+<summary>Single-query solution</summary>
+
+```sql
+UPDATE person SET last_name = 'Kleiner' 
+WHERE (first_name = 'Hans' OR first_name = 'Cindy') AND last_name = 'Klein'; 
+```
+</details>
+<br />
+
+| **Note**    |
+| ----------- |
+|When you do the same update from an application (like in a cleanstep in TOPdesk), then performance becomes an issue. If you did a select first, and then an update, the intermediate result set can be huge in the memory in case of a lot of records. Furthermore, SQL Server cannot do much optimization with 2 queries. It's a good practice to do that in one single query.|
+
+<!-- blank line -->
+----
+<!-- blank line -->
+
+**Exercise 4**: Add two new people to the person table, so that it looks like:
+
+| first_name | last_name | date_of_birth | weight_kg | shoe_size |
+| --------   | --------  | --------      | --------  | --------  |
+| Otto       | Herz      | '1988-02-19'  | 112       | NULL      |
+| Kathie     | Herz      | '1989-12-29'  | 64        | 39        |
+
+**Hints**:
+
+* An example of insert data into a table is (and you need something very similar):
+```sql
+INSERT INTO tablename (column1, column2, ...)
+  VALUES (value1, value2, ...)
+```
+* A date can be inserted in a format like '1900-01-01'
+* Every mandatory field has to be added, otherwise database will throw an error. Experiment with it.
+* You can generate random UUIDs using the function NEWID() for the person_id.
+* cluster_id is a special column: it is mandatory, but the database will set it, as it's constructed that way. This will be explained in depth in Structureland.
+* You can create the two rows with 2 separate insert statement or by just 1 combined insert:
+```sql
+INSERT INTO tablename (column1, column2, ...) VALUES
+  (value1, value2, ...),
+  (valueA, valueB, ...)
+```
+
+<details>
+<summary>Solution 1</summary>
+
+```sql
+INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth)
+  VALUES (NEWID(), 'Otto', 'Herz', 112, '1988-02-19')
+INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth, shoe_size)
+  VALUES (NEWID(), 'Kathie', 'Herz', 64, '1989-12-29', 39)
+```
+</details>
+
+<details>
+<summary>Solution 2</summary>
+
+```sql
+INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth, shoe_size) VALUES
+  (NEWID(), 'Otto', 'Herz', 112, '1988-02-19', NULL),
+  (NEWID(), 'Kathie', 'Herz', 64, '1989-12-29', 39)
+```
+</details>
+<br />
+
+<!-- blank line -->
+----
+<!-- blank line -->
+
+**Exercise 5**: It turned out they are twins, and Otto's birth date was wrong in the database. 
+Set it to same as Kathie's, without explicitly putting the date.
+
+* Use the result of a select in the update statement:
+```sql
+UPDATE tablename
+SET column = (SELECT column FROM tablename WHERE condition)
+WHERE condition
+```
+* Construct first the inner select. Make sure it returns only 1 value, which would fit as a value in the column to set in the ```update```.
+
+<details>
+<summary>Check solution with this select</summary>
+
+```sql
+SELECT * FROM person WHERE 
+(first_name = 'Otto' AND last_name = 'Herz') OR
+(first_name = 'Kathie' AND last_name = 'Herz')
+```
+</details>
+
+<details>
+<summary>Solution</summary>
+
+```sql
+UPDATE person
+SET date_of_birth = (SELECT date_of_birth FROM person WHERE first_name = 'Kathie' AND last_name = 'Herz')
+WHERE first_name = 'Otto' AND last_name = 'Herz'
+```
+</details>
+<br />
+
+<!-- blank line -->
+----
+<!-- blank line -->
+
+>
+> The WiFi cafe is crowded, but nobody is paying attention to the shadowy figure in the 
+> far corner typing away on his laptop. Otto Herz, notorious hacker and most wanted person,
+> had gained access to the police database. Now, 
+> with just a few commands on his keyboard, he could make himself disappear.
+>
+
+**Exercise 6**: Delete Otto from the person table.
+
+**Hints**:
+
+* The basic structure of a delete query is:
+```sql
+DELETE FROM tablename
+  WHERE condition
+```
+* Without a `WHERE` condition everything gets deleted from the table, but not the table itself. 
+So don't forget to add a `WHERE` condition.
+* There are cases when a record cannot be deleted, because it has a reference on the record in another table or maybe within the same table. The database can enforce this kind of dependency between records. Now not this is the case.
+
+<details>
+<summary>Solution</summary>
+
+```sql
+DELETE FROM person
+WHERE (first_name = 'Otto' AND last_name = 'Herz')
+```
+</details>
+<br />
+
+<!-- blank line -->
+----
+<!-- blank line -->
+
+**Exercise 7**: It turned out the registration office was attacked by hackers, and sent wrong data to other offices. Restore the database you had before the changes.
+
+**Hints**:
+
+* Right click on the database you want to restore, and click on Tasks -> Restore -> Database. Default settings are proper in most cases (Query windows can not be opened during the restore process).
+* In case of error, you can check the error message in the bottom left corner. If it says there are open connections to the database, disconnect your own session(s) from it. You can do it by changing current database in the top left corner to master in your Query window(s).
+* If it still doesn't allow restoring, it might be because of some lingering connections. Normally you should check who is connected to the database, but this time - as this is your own database - it doesn't hurt to kick out everyone else. You can do that on the Options page by enabling Close existing connections.
+
+<details>
+<summary>Solution</summary>
+
+<p>
+<img src="images/restore-database.png" alt="Restore database"/>
+</p>
+</details>
+

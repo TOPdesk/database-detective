@@ -1,0 +1,28 @@
+*.class
+target/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+#IntelliJ: everything except shared run configurations
+.idea/*
+!.idea/runConfigurations/
+*.iml
+
+#Eclipse
+.metadata 
+bin/
+tmp/
+*.tmp
+*.bak
+.settings/
+.project
+.classpath
+
+#Other
+initial-setup-application/dependency-reduced-pom.xml
+
+# Generated site (with mkdocs)
+public

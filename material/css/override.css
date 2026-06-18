@@ -1,0 +1,46 @@
+.wy-table-responsive table td, .wy-table-responsive table th {
+	white-space: normal;
+}
+
+details {
+	margin-bottom: 1rem;
+}
+
+summary {
+	margin-bottom: 1rem;
+}
+
+/* source: https://freefrontend.com/css-paper-effects/ */
+blockquote {
+	background: #fff;
+	box-shadow: 0 0 10px rgba(0,0,0,0.3);
+	margin: 26px auto 0;
+	padding: 24px;
+	position: relative;
+	width: 80%;
+	z-index: 0;
+}
+/*
+blockquote:before, blockquote:after {
+	content: "";
+	height: 98%;
+	position: absolute;
+	width: 100%;
+}
+blockquote:before {
+	background: #fafafa;
+	box-shadow: 0 0 8px rgba(0,0,0,0.2);
+	left: -5px;
+	top: 4px;
+	transform: rotate(-2.5deg);
+	z-index: -2;
+}
+blockquote:after {
+	background: #f6f6f6;
+	box-shadow: 0 0 3px rgba(0,0,0,0.2);
+	right: -3px;
+	top: 1px;
+	transform: rotate(1.4deg);
+	z-index: -1;
+}
+*/

@@ -1,0 +1,28 @@
+site_name: Database Workshop
+nav:
+  - 'Map': 'index.md'
+  - 'Intro Street':
+    - 'Read basics': intro-street/read-basics.md
+  - 'Sequel Basicland':
+    - 'Basic querying': sequel-basicland/basic-querying.md
+    - 'Querying with tricky types': sequel-basicland/querying-with-tricky-types.md
+    - 'Data modification': sequel-basicland/data-modification.md
+  - 'Midtown Join and Aggregation':
+    - 'Simple joins': midtown-join-and-aggregation/simple-joins.md
+    - 'Aggregation': midtown-join-and-aggregation/aggregation.md
+    - 'Complex joins': midtown-join-and-aggregation/complex-joins.md
+  - 'Upper Structureland':
+    - 'Data modeling': upper-structureland/data-modeling.md
+    - 'Practice database design': upper-structureland/practice-database-design.md
+    - 'Create and drop tables': upper-structureland/create-and-drop-tables.md
+    - 'Practice database creation': upper-structureland/practice-database-creation.md
+    - 'Change table structure': upper-structureland/change-table-structure.md
+
+docs_dir: material
+site_dir: public
+use_directory_urls: false
+theme: readthedocs
+markdown_extensions:
+  - pymdownx.superfences
+extra_css:
+  - css/override.css
