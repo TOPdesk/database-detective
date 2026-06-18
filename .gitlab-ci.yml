@@ -1,0 +1,13 @@
+image: python:3
+
+pages:
+  stage: deploy
+  script:
+    - pip install -r requirements.txt
+    - mkdocs build
+  artifacts:
+    paths:
+      - public
+  only:
+    variables:
+      - $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
