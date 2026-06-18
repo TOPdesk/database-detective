@@ -1,4 +1,5 @@
 site_name: Database Workshop
+site_url: https://topdesk.github.io/database-detective/
 nav:
   - 'Map': 'index.md'
   - 'Intro Street':
