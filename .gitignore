@@ -24,5 +24,8 @@ tmp/
 #Other
 initial-setup-application/dependency-reduced-pom.xml
 
+# Python
+.venv
+
 # Generated site (with mkdocs)
 public
