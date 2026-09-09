@@ -20,6 +20,7 @@ mixed up. [(complete list of all possible format)](https://docs.microsoft.com/en
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT *
 FROM person
@@ -63,6 +64,7 @@ SELECT DATEDIFF(year, '1962-08-18', GETDATE())
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) FROM person
 ```
@@ -82,6 +84,7 @@ SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) FROM person
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT 
     person_id, 
@@ -108,6 +111,7 @@ FROM person
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT 
     person_id, 
@@ -148,6 +152,7 @@ years old, I'd like to see everyone with this age, with all their data, still or
 <details>
 <summary>Solution with repeated calculation</summary>
 
+<!-- sql-test: rows=25 -->
 ```sql
 SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) AS age 
 FROM person 
@@ -187,6 +192,7 @@ columns later in the query.
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=25 -->
 ```sql
 WITH persons_with_age (first_name, last_name, age) AS (
        SELECT first_name, last_name, DATEDIFF(year, date_of_birth, GETDATE())
@@ -214,6 +220,7 @@ ORDER BY age;
 <details>
 <summary>Solution 1</summary>
 
+<!-- sql-test: rows=0 -->
 ```sql
 SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) AS age 
 FROM person 
@@ -227,6 +234,7 @@ AND DATEDIFF(year, date_of_birth, GETDATE()) < 30;
 <details>
 <summary>Solution 2</summary>
 
+<!-- sql-test: rows=0 -->
 ```sql
 WITH persons_with_age (first_name, last_name, age, is_male, hair, shoe_size) AS (
        SELECT first_name, last_name, DATEDIFF(year, date_of_birth, GETDATE()), is_male, hair, shoe_size
@@ -277,6 +285,7 @@ clear, use brackets like this: condition1 `AND` (condition2 `OR` condition3).
 <details>
 <summary>Solution 1</summary>
 
+<!-- sql-test: rows=1; first_name=Martin; last_name=Walsh -->
 ```sql
 SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) AS age 
 FROM person 
@@ -289,6 +298,7 @@ AND DATEDIFF(year, date_of_birth, GETDATE()) < 30;
 <details>
 <summary>Solution 2</summary>
 
+<!-- sql-test: rows=1; first_name=Martin; last_name=Walsh -->
 ```sql
 WITH persons_with_age (first_name, last_name, age, is_male, hair, shoe_size) AS (
     SELECT first_name, last_name, DATEDIFF(year, date_of_birth, GETDATE()), is_male, hair, shoe_size
@@ -304,6 +314,7 @@ ORDER BY age;
 <details>
 <summary>Solution 3</summary>
 
+<!-- sql-test: rows=1; first_name=Martin; last_name=Walsh -->
 ```sql
 SELECT first_name, last_name, is_male, hair, shoe_size, personCalculatedValues.age
 FROM person

@@ -60,6 +60,7 @@ If you are on the fast track, check out the story line and the exercises with th
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=1; iban=US48BANK830816901 -->
 ```sql
 SELECT * FROM person p
 JOIN account_person ap ON ap.person_id = p.person_id
@@ -71,6 +72,7 @@ WHERE p.first_name = 'Vern' AND p.last_name = 'Jameson'
 <details>
 <summary>An equivalent solution</summary>
 
+<!-- sql-test: rows=1; IBAN=US48BANK830816901 -->
 ```sql
 SELECT * FROM account_person ap 
 JOIN person p ON p.person_id = ap.person_id
@@ -105,6 +107,7 @@ This takes the distinct (different) values from the group-by column, and to ever
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=15; contra_IBAN=US81BANK2096431873 -->
 ```sql
 SELECT contra_IBAN, SUM(amount) AS SUM
   FROM transfer
@@ -133,6 +136,7 @@ SELECT contra_IBAN, SUM(amount) AS SUM
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=1; first_name=Peter; last_name=Patrelli -->
 ```sql
 SELECT * FROM account_person AS ap
 JOIN person AS p ON ap.person_id = p.person_id

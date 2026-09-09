@@ -70,6 +70,7 @@ SELECT * FROM table1 AS t1 JOIN table2 AS t2 ON t1.primaryKey = t2.foreignKey
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT p.first_name, p.last_name, c.color, c.make, c.model, c.license_plate
 FROM person AS p
@@ -90,6 +91,7 @@ JOIN car AS c ON p.person_id = c.person_id
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=1 -->
 ```sql
 SELECT p.first_name, p.last_name, c.color, c.make, c.model, c.license_plate
 FROM person AS p
@@ -138,6 +140,7 @@ WHERE license_plate LIKE '5%VI%1'
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=0 -->
 ```sql
 SELECT p.first_name, p.last_name, c.color, c.make, c.model, c.license_plate 
 FROM person AS p
@@ -174,6 +177,7 @@ Sometimes, you are interested in results from one table where there is no corres
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT p.first_name, p.last_name, c.color, c.make, c.model, c.license_plate
 FROM person AS p
@@ -201,6 +205,7 @@ FULL JOIN car AS c ON p.person_id = c.person_id
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT p.first_name, p.last_name, c.color, c.make, c.model, c.license_plate
 FROM person AS p
@@ -226,6 +231,7 @@ LEFT JOIN car AS c ON p.person_id = c.person_id
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT p.first_name, p.last_name, c.color, c.make, c.model, c.license_plate
 FROM person AS p
@@ -243,6 +249,7 @@ RIGHT JOIN car AS c ON p.person_id = c.person_id
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT p.first_name, p.last_name, c.color, c.make, c.model, c.license_plate
 FROM car AS c
@@ -259,6 +266,7 @@ LEFT JOIN person AS p ON p.person_id = c.person_id
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=1; license_plate=66-B4-79 -->
 ```sql
 SELECT p.first_name, p.last_name, c.color, c.make, c.model, c.license_plate FROM person AS p
 RIGHT JOIN car AS c ON p.person_id = c.person_id
@@ -307,6 +315,7 @@ WHERE p.person_id = c.person_id
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT * 
 FROM transfer 
@@ -323,6 +332,7 @@ WHERE description LIKE '%rental%';
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT * 
 FROM transfer 
@@ -352,6 +362,7 @@ WHERE description = 'Car rental 66-B4-79'
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=1 -->
 ```sql
 SELECT t.*, p.first_name, p.last_name 
 FROM transfer t 
@@ -386,6 +397,7 @@ Kip Stephenson is on the top of the results.
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: first_name=Kip; last_name=Stephenson -->
 ```sql
 SELECT t.*, p.first_name, p.last_name 
 FROM transfer t 
@@ -399,6 +411,7 @@ ORDER BY DATE DESC
 <details>
 <summary>Solution with top 1</summary>
 
+<!-- sql-test: rows=1; first_name=Kip; last_name=Stephenson -->
 ```sql
 SELECT TOP 1 t.*, p.first_name, p.last_name 
 FROM transfer t 

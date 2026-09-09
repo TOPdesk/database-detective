@@ -52,6 +52,7 @@ If you are on the fast track, just read the story, understand the relations betw
 
 He has 2 phones in the database, 1 of them is a Sony.
 
+<!-- sql-test: rows=2 -->
 ```sql
 SELECT *
 FROM phone AS ph 
@@ -79,6 +80,7 @@ JOIN phone AS p2 ON p2.some_field = c.another_field
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=1 -->
 ```sql
 SELECT TOP 1 c.time, c.to_phone_number, c.from_phone_number, from_person.first_name, from_person.last_name, to_person.first_name, to_person.last_name
 FROM call AS c

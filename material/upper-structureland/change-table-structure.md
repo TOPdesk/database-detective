@@ -17,6 +17,7 @@ ADD <columnname> <columntype> <nullability>
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 ALTER TABLE person<br>
 ADD weight_kg INT NULL

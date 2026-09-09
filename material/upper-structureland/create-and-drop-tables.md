@@ -30,6 +30,7 @@ CREATE TABLE address(
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 CREATE TABLE person(
 first_name NVARCHAR(50) NOT NULL,
@@ -62,6 +63,7 @@ date_of_birth DATE NULL
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 DROP TABLE address
 DROP TABLE person
