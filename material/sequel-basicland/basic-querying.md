@@ -38,6 +38,7 @@ where `*` means you'll see every column, but you can replace it with a list of c
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT * FROM person
 ```
@@ -61,6 +62,7 @@ SELECT * FROM person
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT DISTINCT hair FROM person
 ```
@@ -88,6 +90,7 @@ The query should return 50 rows.
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=50 -->
 ```sql
 SELECT * FROM person WHERE hair = 'Black'
 ```
@@ -115,6 +118,7 @@ The query should return 79 rows.
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=79 -->
 ```sql
 SELECT * FROM person WHERE is_male=1
 ```
@@ -149,6 +153,7 @@ The query should return 24 rows.
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=24 -->
 ```sql
 SELECT * FROM person
 WHERE is_male=1 AND hair='Black'
@@ -186,6 +191,7 @@ The query should return 1 person: Neil Davis.
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=1; first_name=Neil; last_name=Davis -->
 ```sql
 SELECT * FROM person
 WHERE is_male=1 AND hair='Black' AND shoe_size = 45

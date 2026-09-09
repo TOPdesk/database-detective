@@ -19,6 +19,7 @@ If you are on the fast track, read and execute the script in the Solution sectio
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 CREATE TABLE person(
 id INT IDENTITY NOT NULL,

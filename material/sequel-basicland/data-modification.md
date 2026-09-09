@@ -45,6 +45,7 @@ saved copy of the database in a file, which can be used to restore (put back) th
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=1 -->
 ```sql
 UPDATE person
 SET hair = 'Black'
@@ -78,6 +79,7 @@ In this exercise, do it in 3 steps, so that you see what's going on:
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test: rows=2 -->
 ```sql
 SELECT * FROM person
 WHERE (first_name = 'Hans'
@@ -105,6 +107,7 @@ WHERE person_id IN ('398E6049-79CB-5B4E-9B36-E8C685E8543B', '73CFED84-EEF9-864F-
 <details>
 <summary>Rename to Klein</summary>
 
+<!-- sql-test -->
 ```sql
 UPDATE person
 SET last_name = 'Klein'
@@ -116,6 +119,7 @@ WHERE person_id IN ('398E6049-79CB-5B4E-9B36-E8C685E8543B', '73CFED84-EEF9-864F-
 <details>
 <summary>Single-query solution</summary>
 
+<!-- sql-test -->
 ```sql
 UPDATE person SET last_name = 'Kleiner' 
 WHERE (first_name = 'Hans' OR first_name = 'Cindy') AND last_name = 'Klein'; 
@@ -159,6 +163,7 @@ INSERT INTO tablename (column1, column2, ...) VALUES
 <details>
 <summary>Solution 1</summary>
 
+<!-- sql-test -->
 ```sql
 INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth)
   VALUES (NEWID(), 'Otto', 'Herz', 112, '1988-02-19')
@@ -170,6 +175,7 @@ INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth, 
 <details>
 <summary>Solution 2</summary>
 
+<!-- sql-test -->
 ```sql
 INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth, shoe_size) VALUES
   (NEWID(), 'Otto', 'Herz', 112, '1988-02-19', NULL),
@@ -196,6 +202,7 @@ WHERE condition
 <details>
 <summary>Check solution with this select</summary>
 
+<!-- sql-test -->
 ```sql
 SELECT * FROM person WHERE 
 (first_name = 'Otto' AND last_name = 'Herz') OR
@@ -206,6 +213,7 @@ SELECT * FROM person WHERE
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 UPDATE person
 SET date_of_birth = (SELECT date_of_birth FROM person WHERE first_name = 'Kathie' AND last_name = 'Herz')
@@ -241,6 +249,7 @@ So don't forget to add a `WHERE` condition.
 <details>
 <summary>Solution</summary>
 
+<!-- sql-test -->
 ```sql
 DELETE FROM person
 WHERE (first_name = 'Otto' AND last_name = 'Herz')
