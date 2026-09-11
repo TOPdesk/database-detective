@@ -91,7 +91,7 @@ JOIN car AS c ON p.person_id = c.person_id
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: rows=1 -->
+<!-- sql-test: rows=2 -->
 ```sql
 SELECT p.first_name, p.last_name, c.color, c.make, c.model, c.license_plate
 FROM person AS p
@@ -362,7 +362,7 @@ WHERE description = 'Car rental 66-B4-79'
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: rows=1 -->
+<!-- sql-test: rows=14 -->
 ```sql
 SELECT t.*, p.first_name, p.last_name 
 FROM transfer t 
@@ -390,14 +390,14 @@ WHERE t.description = 'Car rental 66-B4-79'
 <details>
 <summary>Check your results</summary>
 <p>
-Kip Stephenson is on the top of the results.
+Aaron Slater is on the top of the results.
 </p>
 </details>
 
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: first_name=Kip; last_name=Stephenson -->
+<!-- sql-test: first_name=Aaron; last_name=Slater -->
 ```sql
 SELECT t.*, p.first_name, p.last_name 
 FROM transfer t 
@@ -411,7 +411,7 @@ ORDER BY DATE DESC
 <details>
 <summary>Solution with top 1</summary>
 
-<!-- sql-test: rows=1; first_name=Kip; last_name=Stephenson -->
+<!-- sql-test: rows=1; first_name=Aaron; last_name=Slater -->
 ```sql
 SELECT TOP 1 t.*, p.first_name, p.last_name 
 FROM transfer t 

@@ -111,14 +111,14 @@ SELECT * FROM person WHERE hair = 'Black'
 <details>
 <summary>Check your results</summary>
 <p>
-The query should return 79 rows.
+The query should return 81 rows.
 </p>
 </details>
 
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: rows=79 -->
+<!-- sql-test: rows=81 -->
 ```sql
 SELECT * FROM person WHERE is_male=1
 ```
@@ -146,14 +146,14 @@ SELECT * FROM person WHERE is_male=1
 <details>
 <summary>Check your results</summary>
 <p>
-The query should return 24 rows.
+The query should return 25 rows.
 </p>
 </details>
 
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: rows=24 -->
+<!-- sql-test: rows=25 -->
 ```sql
 SELECT * FROM person
 WHERE is_male=1 AND hair='Black'
