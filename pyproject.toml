@@ -1,0 +1,13 @@
+[project]
+name = "database-detective"
+version = "0.1.0"
+description = "Database Detective: a beginner SQL workshop"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "mkdocs",
+    "pymdown-extensions",
+]
+
+[tool.uv]
+package = false
