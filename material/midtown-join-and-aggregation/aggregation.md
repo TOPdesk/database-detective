@@ -100,14 +100,14 @@ This takes the distinct (different) values from the group-by column, and to ever
 
 <details>
 <summary>Check your results</summary>
-<p>There were 15 contra parties sending money to US48BANK830816901.</p>
+<p>There were 12 contra parties sending money to US48BANK830816901.</p>
 <p>The contra account that transferred the most is US81BANK2096431873.</p>
 </details>
 
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: rows=15; contra_IBAN=US81BANK2096431873 -->
+<!-- sql-test: rows=12; contra_IBAN=US81BANK2096431873 -->
 ```sql
 SELECT contra_IBAN, SUM(amount) AS SUM
   FROM transfer

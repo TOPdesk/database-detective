@@ -4,11 +4,11 @@
 If you are on the fast track and know about these, read the story line, exercises, solutions and notes only.
 
 >
-> Dick looked at the record of the suspicious guy they'd just found, and noticed his date of birth. 1947. 
+> Dick looked at the record of the suspicious guy they'd just found, and noticed his date of birth. 1957. 
 > Something is wrong. He seems too old to be a murderer...
 >
 
-**Exercise 1**: Which people were born after 1987?
+**Exercise 1**: Which people were born after 1997?
 
 **Hints**:
 
@@ -24,15 +24,15 @@ mixed up. [(complete list of all possible format)](https://docs.microsoft.com/en
 ```sql
 SELECT *
 FROM person
-WHERE date_of_birth >= '1988/01/01'
+WHERE date_of_birth >= '1998/01/01'
 ```
 </details>
 
 <details>
 <summary>A few alternatives to the date</summary>
 <p>
-'01/01/1988'<br>
-'1988-01-01'<br>
+'01/01/1998'<br>
+'1998-01-01'<br>
 </p>
 </details>
 <br />
@@ -145,14 +145,14 @@ years old, I'd like to see everyone with this age, with all their data, still or
 <details>
 <summary>Check your results</summary>
 <p>
-25 rows expected.
+21 rows expected.
 </p>
 </details>
 
 <details>
 <summary>Solution with repeated calculation</summary>
 
-<!-- sql-test: rows=25 -->
+<!-- sql-test: rows=21 -->
 ```sql
 SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) AS age 
 FROM person 
@@ -174,6 +174,7 @@ Due to the repetition, it's not advisable to use this query in production. The n
 **Note**:
 
 Here is an example of a Common Table Expression (CTE):
+<!-- sql-test: rows=21 -->
 ```sql
 WITH name_of_the_query (name_of_column1, name_of_column2, name_of_column3) AS (
        SELECT a, b, any_function --this internal select is executable separately
@@ -192,7 +193,7 @@ columns later in the query.
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: rows=25 -->
+<!-- sql-test: rows=21 -->
 ```sql
 WITH persons_with_age (first_name, last_name, age) AS (
        SELECT first_name, last_name, DATEDIFF(year, date_of_birth, GETDATE())
