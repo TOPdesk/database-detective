@@ -26,6 +26,17 @@ initial-setup-application/dependency-reduced-pom.xml
 
 # Python
 .venv
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local database connection config for tools/run_sql_tests.py
+.env
+
+# Ad-hoc local sqlite fixture databases
+*.sqlite
+*.sqlite3
+*.db
 
 # Generated site (with mkdocs)
 public
