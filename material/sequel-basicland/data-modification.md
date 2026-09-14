@@ -39,7 +39,7 @@ saved copy of the database in a file, which can be used to restore (put back) th
 * `WHERE` condition is especially important for updates: it works without conditions as well: updates all fields! Most of the time this is not what you want.
 * Format of the `WHERE` condition is the same as in a `SELECT`. 
 * In Basicland we go with the default *transaction* setting. It means that every query you run, takes effect immediately in the database, and cannot be reverted. This setting can be changed, but unnecessary for now.
-* See examples [here](https://wiki.topdesk.com/wiki/Example_codes_in_MS_SQL), or in Google.
+* See examples in SQLite documentation, or in Google.
 * To check it, use a select query with the same where condition.
 
 <details>
@@ -62,8 +62,7 @@ WHERE first_name = 'Kira' AND last_name = 'Murray'
 <!-- blank line -->
 
 **Exercise 3a**: Hans Klein and Cindy Klein are a brother and a sister, and they changed 
-their last names to Kleiner. Database guys are sitting in front of their SQL Server Management Studio,
-and want to do the change in the database.
+their last names to Kleiner, and want to do the change in the database.
 
 In this exercise, do it in 3 steps, so that you see what's going on:
 
@@ -129,7 +128,7 @@ WHERE (first_name = 'Hans' OR first_name = 'Cindy') AND last_name = 'Klein';
 
 | **Note**    |
 | ----------- |
-|When you do the same update from an application (like in a cleanstep in TOPdesk), then performance becomes an issue. If you did a select first, and then an update, the intermediate result set can be huge in the memory in case of a lot of records. Furthermore, SQL Server cannot do much optimization with 2 queries. It's a good practice to do that in one single query.|
+|When you do the same update from an application (like in a cleanstep in TOPdesk), performance becomes an issue. If you did a select first and then an update, the intermediate result set can be huge in memory in case of many records. It's a good practice to do that in one single query.|
 
 <!-- blank line -->
 ----
@@ -151,7 +150,7 @@ INSERT INTO tablename (column1, column2, ...)
 ```
 * A date can be inserted in a format like '1900-01-01'
 * Every mandatory field has to be added, otherwise database will throw an error. Experiment with it.
-* You can generate random UUIDs using the function NEWID() for the person_id.
+* For SQLite, use explicit UUID strings for person_id values.
 * cluster_id is a special column: it is mandatory, but the database will set it, as it's constructed that way. This will be explained in depth in Structureland.
 * You can create the two rows with 2 separate insert statement or by just 1 combined insert:
 ```sql
@@ -166,9 +165,9 @@ INSERT INTO tablename (column1, column2, ...) VALUES
 <!-- sql-test -->
 ```sql
 INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth)
-  VALUES (NEWID(), 'Otto', 'Herz', 112, '1988-02-19')
+  VALUES ('30e4f1df-cf4a-4b13-8f8a-d2fef53f7c41', 'Otto', 'Herz', 112, '1988-02-19')
 INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth, shoe_size)
-  VALUES (NEWID(), 'Kathie', 'Herz', 64, '1989-12-29', 39)
+  VALUES ('8b6f9570-0358-4d16-9ac4-223670a85f49', 'Kathie', 'Herz', 64, '1989-12-29', 39)
 ```
 </details>
 
@@ -178,8 +177,8 @@ INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth, 
 <!-- sql-test -->
 ```sql
 INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth, shoe_size) VALUES
-  (NEWID(), 'Otto', 'Herz', 112, '1988-02-19', NULL),
-  (NEWID(), 'Kathie', 'Herz', 64, '1989-12-29', 39)
+  ('30e4f1df-cf4a-4b13-8f8a-d2fef53f7c41', 'Otto', 'Herz', 112, '1988-02-19', NULL),
+  ('8b6f9570-0358-4d16-9ac4-223670a85f49', 'Kathie', 'Herz', 64, '1989-12-29', 39)
 ```
 </details>
 <br />

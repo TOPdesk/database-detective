@@ -34,7 +34,7 @@ If you already know this part of SQL, you can save time by reading only the stor
 SELECT * FROM tablename
 ```
 where `*` means you'll see every column, but you can replace it with a list of comma separated column names.
-* Whenever you need examples, check [the example codes here](https://wiki.topdesk.com/wiki/Example_codes_in_MS_SQL), or google it (don't forget to put **sql server** in the search string, as it might be different on other databases).
+* Whenever you need examples, check the SQLite documentation, or search online for SQLite-specific query examples.
 <details>
 <summary>Solution</summary>
 

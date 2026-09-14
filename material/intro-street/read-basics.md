@@ -9,12 +9,12 @@ Goal of a database: to store data on a way it survives a restart or power off pe
 
 <img src="images/database.jpg" width="150" align="right"/>
 
-You might heard about these database systems (often called just databases; so when you hear database, it either means the database system, or a specific database storing a collection of data): MS SQL (= Microsoft SQL = SQL Server), Oracle, PostgreSQL (say: [postgres] or [postgres kju: el]), MongoDB, Neo4j, just to mention a few. They are capable of storing the structures and data you want. TOPdesk (the company) uses mainly MS SQL database.
+You might heard about these database systems (often called just databases; so when you hear database, it either means the database system, or a specific database storing a collection of data): SQLite, MS SQL (= Microsoft SQL = SQL Server), Oracle PostgreSQL (say: [postgres] or [postgres kju: el]), Oracle, MongoDB, Neo4j, just to mention a few. They are capable of storing the structures and data you want. TOPdesk (the company) uses mainly MS SQL database.
 
 #### Terminology (magic words explained)
 
 * **Relational database (= RDBMS = Relational Database Management System)**  
-This is the most prevalent and common type of database (the other category is called non-relational database). It is a type of database that consists of tables, with relations between those tables. Relations are declared on the database level, for example, if there is a table of cats and of owners, then you define the relations: 1 cat belongs to 0 or 1 owner. 1 owner can have 0 to many cats. A database system must fulfill some criteria to deserve the category relational (atomicity, consistency, isolation, durability etc.). MS SQL is a relational database.
+This is the most prevalent and common type of database (the other category is called non-relational database). It is a type of database that consists of tables, with relations between those tables. Relations are declared on the database level, for example, if there is a table of cats and of owners, then you define the relations: 1 cat belongs to 0 or 1 owner. 1 owner can have 0 to many cats. A database system must fulfill some criteria to deserve the category relational (atomicity, consistency, isolation, durability etc.). SQLite is a relational database.
 <img src="images/sql-vs-nosql.jpg" alt="drawing"/>
 
 * **SQL vs. noSQL** makes the same distinction as relational vs. non-relational. SQL is a language of the relational databases, which can be used to get or put data from/to the database, either by a human, or by an application. noSQL stands for „not only SQL”, and is used to describe non-relational databases. noSQL is a category of very different databases, without a common query language. noSQL databases are a very interesting topic, but outside the scope of this workshop.
@@ -46,9 +46,9 @@ A table structure is created by defining columns, ID, relations to other tables 
 Creating, querying a table are done by executing some magic command in a magic tool, and then they are stored at a magic place. In the simplest case:
 
  * The magic commands are written in **SQL** language.
- * The magic tool is *Microsoft SQL Server Management Studio*, which has a nice area for the commands (queries), and has an Execute button as well.
- * The magic place is on a database server maintained by Ops, which is set in the magic tool.
+ * A handy way to run queries is a SQL client such as SQLiteStudio or DB Browser for SQLite.
+ * The magic place is on a database server, which is configured in the magic tool. With SQLite, this can be on your own file system or even in the browser.
 
 The term SQL is often used in a context of **SQL script**: the commands can be saved into a file with .sql extension, which can be executed by the tool on the server.
 
-**Database client** is a broader term for the applications, which are able to manipulate data or data structure. It can be a tool like Microsoft SQL Server Management Studio, or also an application like TOPdesk. If it's an application, it compiles into SQL statements in the background, connects to the server, and when the code gets to a specific point, it runs without human interaction. In this case, the database client is different from Microsoft SQL Server Management Studio.
+**Database client** is a broader term for applications that can manipulate data or data structures. It can be a tool like SQLiteStudio, or an application that compiles SQL statements in the background and runs them automatically.

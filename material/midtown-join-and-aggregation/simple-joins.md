@@ -385,7 +385,7 @@ WHERE t.description = 'Car rental 66-B4-79'
 
 | **Note**    |
 | ----------- |
-| You can make it even nicer by adding `TOP 1` to only show the record with the highest date. |
+| You can make it even nicer by adding `LIMIT 1` to only show the record with the highest date. |
 
 <details>
 <summary>Check your results</summary>
@@ -409,16 +409,17 @@ ORDER BY DATE DESC
 </details>
 
 <details>
-<summary>Solution with top 1</summary>
+<summary>Solution with LIMIT 1</summary>
 
 <!-- sql-test: rows=1; first_name=Aaron; last_name=Slater -->
 ```sql
-SELECT TOP 1 t.*, p.first_name, p.last_name 
+SELECT t.*, p.first_name, p.last_name 
 FROM transfer t 
 JOIN account_person ap ON t.IBAN = ap.IBAN 
 JOIN person p ON ap.person_id = p.person_id 
 WHERE t.description = 'Car rental 66-B4-79' 
 ORDER BY DATE DESC
+LIMIT 1
 ```
 </details>
 

@@ -36,9 +36,7 @@ uv run python3 tools/run_sql_tests.py --backend sqlite --sqlite-path detective.d
 
 `run_sql_tests.py` needs a database to connect to, configured via CLI flags
 (as above), environment variables, or a `.env` file — copy `.env.example` to
-`.env` and fill it in. Run with `--help` for the full list of options,
-including how to test against MS SQL Server instead of SQLite (needs the
-optional `mssql` dependency group: `uv sync --extra mssql`).
+`.env` and fill it in. Run with `--help` for the full list of options.
 
 Note that some of the workshop's own solutions are `UPDATE`/`INSERT`/`DELETE`
 statements that later exercises depend on, so tests run in marker order

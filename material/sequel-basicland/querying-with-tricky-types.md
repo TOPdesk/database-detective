@@ -13,9 +13,7 @@ If you are on the fast track and know about these, read the story line, exercise
 **Hints**:
 
 * A condition can use different operators like `=`, `<`, `<=`, `>`, `>=`, `<>`.
-* Filtering on dates is similar to filtering on texts: use quotes. Multiple recognizable formats 
-are accepted by MS SQL in regards of the day-month-year order, and the SQL standard is YYYY-MM-DD. Make sure month and day are not 
-mixed up. [(complete list of all possible format)](https://docs.microsoft.com/en-us/sql/t-sql/data-types/date-transact-sql?view=sql-server-ver15)
+* Filtering on dates is similar to filtering on texts: use quotes. In SQLite, use the SQL standard `YYYY-MM-DD` format to avoid ambiguity.
 
 <details>
 <summary>Solution</summary>
@@ -46,27 +44,27 @@ Let the query calculate it for every person.
 
 **Hints**:
 
-* There is a function called `GETDATE()` which returns the current date. Try this:
+* In SQLite you can use `CURRENT_TIMESTAMP` to get current date and time. Try this:
 ```sql
-SELECT GETDATE()
+SELECT CURRENT_TIMESTAMP
 ```
-* A calculated value like `GETDATE()` can be printed and used in a format of a column, by giving a name for it:
+* A calculated value like `CURRENT_TIMESTAMP` can be printed and used as a named column:
 ```sql
- SELECT GETDATE() AS currentdate
+SELECT CURRENT_TIMESTAMP AS currentdate
 ```
-* There is another function called `DATEDIFF`, which has 3 parameters: a unit of time, a start date and an end date. It calculates the difference between 2 dates in the given time unit. Try this:
+* SQLite does not have `DATEDIFF`. For rough age in years, compare the year parts using `strftime`:
 ```sql
-SELECT DATEDIFF(year, '1962-08-18', GETDATE())
+SELECT CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', '1962-08-18') AS INTEGER)
 ```
 * Both can be used combined with select from a table. So the name of a column can be passed as a parameter, and then it calculates the value for every selected row.
-* There are a lot of functions implemented in MS SQL. There are so-called reference guides to find the one you need. See for example: [datediff in Microsoft's T-SQL documentation](https://docs.microsoft.com/en-us/sql/t-sql/functions/datediff-transact-sql)
+* There are a lot of functions implemented in SQLite. The function reference is handy when you need alternatives to functions from other database systems.
 
 <details>
 <summary>Solution</summary>
 
 <!-- sql-test -->
 ```sql
-SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) FROM person
+SELECT *, CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age FROM person
 ```
 </details>
 <br />
@@ -91,7 +89,7 @@ SELECT
     first_name, 
     last_name, 
     date_of_birth, 
-    DATEDIFF(year, date_of_birth, GETDATE()) AS age 
+    CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age 
 FROM person
 ```
 </details>
@@ -118,7 +116,7 @@ SELECT
     first_name, 
     last_name, 
     date_of_birth, 
-    DATEDIFF(year, date_of_birth, GETDATE()) AS age 
+    CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age 
 FROM person 
 ORDER BY age;
 ```
@@ -134,7 +132,7 @@ years old, I'd like to see everyone with this age, with all their data, still or
 
 | **Note**    |
 | ----------- |
-| MS SQL does not allow usage of user-defined names of columns in the `WHERE` condition, as `WHERE` condition is parsed before the custom name of a column. Example: `SELECT first_name AS custom_name FROM person WHERE custom_name = 'Zelda'` -> this leads to a syntax error.|
+| In SQL, aliases defined in `SELECT` are generally not available in `WHERE`, because `WHERE` is processed before `SELECT`. Example: `SELECT first_name AS custom_name FROM person WHERE custom_name = 'Zelda'` leads to an error. |
 
 <!-- blank line -->
 ----
@@ -154,13 +152,14 @@ years old, I'd like to see everyone with this age, with all their data, still or
 
 <!-- sql-test: rows=21 -->
 ```sql
-SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) AS age 
+SELECT *, CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age 
 FROM person 
-WHERE DATEDIFF(year, date_of_birth, GETDATE()) >= 20 AND DATEDIFF(year, date_of_birth, GETDATE()) <= 30
+WHERE CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) >= 20
+    AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) <= 30
 ORDER BY age
 ```
 
-You may be wondering why it's not possible to refer to the `age` alias again in the `WHERE` clause. The answer is, that there is no good reason for this limitation. Oracle supports this, SQL Server doesn't.
+You may be wondering why it's not possible to refer to the `age` alias again in the `WHERE` clause. The answer is, that there is no good reason for this limitation. Oracle supports this, SQLite doesn't.
 
 Due to the repetition, it's not advisable to use this query in production. The next exercise shows a better way.
 </details>
@@ -169,12 +168,11 @@ Due to the repetition, it's not advisable to use this query in production. The n
 ----
 <!-- blank line -->
 
-**Exercise 5b**: Make it more efficient: eliminate repetition of the calculation. SQL Server offers the so-called Common Table Expression (CTE) for this situation.
+**Exercise 5b**: Make it more efficient: eliminate repetition of the calculation. SQL offers the so-called Common Table Expression (CTE) for this situation.
 
 **Note**:
 
 Here is an example of a Common Table Expression (CTE):
-<!-- sql-test: rows=21 -->
 ```sql
 WITH name_of_the_query (name_of_column1, name_of_column2, name_of_column3) AS (
        SELECT a, b, any_function --this internal select is executable separately
@@ -196,7 +194,8 @@ columns later in the query.
 <!-- sql-test: rows=21 -->
 ```sql
 WITH persons_with_age (first_name, last_name, age) AS (
-       SELECT first_name, last_name, DATEDIFF(year, date_of_birth, GETDATE())
+    SELECT first_name, last_name,
+        CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER)
        FROM person
 )
 SELECT * FROM persons_with_age WHERE age >= 20 AND age <= 30
@@ -223,11 +222,11 @@ ORDER BY age;
 
 <!-- sql-test: rows=0 -->
 ```sql
-SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) AS age 
+SELECT *, CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age 
 FROM person 
 WHERE is_male=1 AND hair='Black' AND shoe_size = 45 
-AND DATEDIFF(year, date_of_birth, GETDATE()) >= 20 
-AND DATEDIFF(year, date_of_birth, GETDATE()) < 30;
+AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) >= 20 
+AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) < 30;
 ```
 </details>
 
@@ -238,7 +237,9 @@ AND DATEDIFF(year, date_of_birth, GETDATE()) < 30;
 <!-- sql-test: rows=0 -->
 ```sql
 WITH persons_with_age (first_name, last_name, age, is_male, hair, shoe_size) AS (
-       SELECT first_name, last_name, DATEDIFF(year, date_of_birth, GETDATE()), is_male, hair, shoe_size
+    SELECT first_name, last_name,
+        CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER),
+        is_male, hair, shoe_size
        FROM person
 )
 SELECT * FROM persons_with_age
@@ -268,9 +269,8 @@ ORDER BY age;
 * A column can be set to allow empty fields. The hair property of the person table are such.
 * To filter on its emptiness or non-emptiness, use `IS NULL` or `IS NOT NULL`. This is not the same as the empty string: ''. Make experiments with it.
 * Note that the shoe_size property also can be empty (check the table columns in the Object explorer). We are interested in people who have no recorded shoe size, so add this too to the criteria. 
-* If you have both `AND` and `OR` in a `WHERE` condition, make sure they are grouped according to your needs:
-in MS SQL `AND` has a higher preference than `OR`. If you want to change the default behaviour, or just want to make the grouping of conditions 
-clear, use brackets like this: condition1 `AND` (condition2 `OR` condition3).
+* If you have both `AND` and `OR` in a `WHERE` condition, make sure they are grouped according to your needs.
+In SQL, `AND` has a higher precedence than `OR`. If you want to change the default behavior, or just want to make grouping clear, use brackets like this: condition1 `AND` (condition2 `OR` condition3).
 
 | **Note**    |
 | ----------- |
@@ -288,11 +288,11 @@ clear, use brackets like this: condition1 `AND` (condition2 `OR` condition3).
 
 <!-- sql-test: rows=1; first_name=Martin; last_name=Walsh -->
 ```sql
-SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) AS age 
+SELECT *, CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age 
 FROM person 
 WHERE is_male=1 AND (hair='Black' OR hair IS NULL) AND (shoe_size = 45 OR shoe_size IS NULL) 
-AND DATEDIFF(year, date_of_birth, GETDATE()) >= 20 
-AND DATEDIFF(year, date_of_birth, GETDATE()) < 30;
+AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) >= 20 
+AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) < 30;
 ```
 </details>
 
@@ -302,7 +302,9 @@ AND DATEDIFF(year, date_of_birth, GETDATE()) < 30;
 <!-- sql-test: rows=1; first_name=Martin; last_name=Walsh -->
 ```sql
 WITH persons_with_age (first_name, last_name, age, is_male, hair, shoe_size) AS (
-    SELECT first_name, last_name, DATEDIFF(year, date_of_birth, GETDATE()), is_male, hair, shoe_size
+    SELECT first_name, last_name,
+           CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER),
+           is_male, hair, shoe_size
     FROM person
 )
 SELECT * FROM persons_with_age
@@ -317,16 +319,15 @@ ORDER BY age;
 
 <!-- sql-test: rows=1; first_name=Martin; last_name=Walsh -->
 ```sql
-SELECT first_name, last_name, is_male, hair, shoe_size, personCalculatedValues.age
+SELECT first_name, last_name, is_male, hair, shoe_size,
+       CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age
 FROM person
-CROSS APPLY (
-    SELECT DATEDIFF(year, date_of_birth, GETDATE()) AS age
-) AS personCalculatedValues
 WHERE is_male = 1
 AND (hair = 'Black' OR hair IS NULL)
 AND (shoe_size = 45 OR shoe_size IS NULL)
-AND personCalculatedValues.age >= 20 AND personCalculatedValues.age < 30
-ORDER BY personCalculatedValues.age;
+AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) >= 20
+AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) < 30
+ORDER BY age;
 ```
 
 </details>
