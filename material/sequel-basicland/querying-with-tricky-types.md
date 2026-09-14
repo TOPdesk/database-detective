@@ -145,14 +145,14 @@ years old, I'd like to see everyone with this age, with all their data, still or
 <details>
 <summary>Check your results</summary>
 <p>
-21 rows expected.
+22 rows expected.
 </p>
 </details>
 
 <details>
 <summary>Solution with repeated calculation</summary>
 
-<!-- sql-test: rows=21 -->
+<!-- sql-test: rows=22 -->
 ```sql
 SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) AS age 
 FROM person 
@@ -174,7 +174,6 @@ Due to the repetition, it's not advisable to use this query in production. The n
 **Note**:
 
 Here is an example of a Common Table Expression (CTE):
-<!-- sql-test: rows=21 -->
 ```sql
 WITH name_of_the_query (name_of_column1, name_of_column2, name_of_column3) AS (
        SELECT a, b, any_function --this internal select is executable separately
@@ -193,7 +192,7 @@ columns later in the query.
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: rows=21 -->
+<!-- sql-test: rows=22 -->
 ```sql
 WITH persons_with_age (first_name, last_name, age) AS (
        SELECT first_name, last_name, DATEDIFF(year, date_of_birth, GETDATE())

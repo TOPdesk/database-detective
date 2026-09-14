@@ -213,7 +213,6 @@ SELECT * FROM person WHERE
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test -->
 ```sql
 UPDATE person
 SET date_of_birth = (SELECT date_of_birth FROM person WHERE first_name = 'Kathie' AND last_name = 'Herz')

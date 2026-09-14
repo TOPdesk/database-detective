@@ -19,8 +19,8 @@ ADD <columnname> <columntype> <nullability>
 
 <!-- sql-test -->
 ```sql
-ALTER TABLE person<br>
-ADD weight_kg INT NULL
+ALTER TABLE person
+ADD number_of_siblings INT NULL
 ```
 </details>
 
