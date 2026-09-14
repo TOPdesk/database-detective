@@ -30,4 +30,4 @@ ADD number_of_siblings INT NULL
 | ----------- |
 | `ALTER TABLE` is a very diverse command, it can change/add new columns, change types, nullability, rename columns etc. | 
 
-**Exercise 2**: Check the new structure visually in Object explorer, and check the table content.
+**Exercise 2**: Check the new structure visually in the Schema Visualization, and check the table content.

@@ -46,9 +46,9 @@ A table structure is created by defining columns, ID, relations to other tables 
 Creating, querying a table are done by executing some magic command in a magic tool, and then they are stored at a magic place. In the simplest case:
 
  * The magic commands are written in **SQL** language.
- * A handy way to run queries is a SQL client such as SQLiteStudio or DB Browser for SQLite.
+ * A handy way to run queries is a SQL client such as [SQLite View online App](https://www.sqliteview.com/app), [Letos](https://letos.org/) or [DB Browser for SQLite](https://sqlitebrowser.org/).
  * The magic place is on a database server, which is configured in the magic tool. With SQLite, this can be on your own file system or even in the browser.
 
 The term SQL is often used in a context of **SQL script**: the commands can be saved into a file with .sql extension, which can be executed by the tool on the server.
 
-**Database client** is a broader term for applications that can manipulate data or data structures. It can be a tool like SQLiteStudio, or an application that compiles SQL statements in the background and runs them automatically.
+**Database client** is a broader term for applications that can manipulate data or data structures. It can be a tool like [Letos](https://letos.org/), or an application that compiles SQL statements in the background and runs them automatically.

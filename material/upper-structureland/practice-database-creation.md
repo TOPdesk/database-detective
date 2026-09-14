@@ -61,6 +61,6 @@ CONSTRAINT fk_peak_sample FOREIGN KEY (sample_id) REFERENCES sample(id)
 
 **Hints**:
 
-* Use a SQLite-capable client with schema visualization (for example, SQLiteStudio or DB Browser for SQLite) to inspect and diagram tables.
+* Use a SQLite-capable client with schema visualization (for example, [SQLite View online App](https://www.sqliteview.com/app), [Letos](https://letos.org/) or [DB Browser for SQLite](https://sqlitebrowser.org/)) to inspect and diagram tables.
 * A diagram is generated. Tables can be moved manually, and it can be configured what kind of data to show on it. 
 * If your SQL client cannot generate diagrams automatically, export the schema and use a separate diagramming tool.
