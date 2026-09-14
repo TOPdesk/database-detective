@@ -83,14 +83,14 @@ SELECT DISTINCT hair FROM person
 <details>
 <summary>Check your results</summary>
 <p>
-The query should return 50 rows.
+The query should return 49 rows.
 </p>
 </details>
 
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: rows=50 -->
+<!-- sql-test: rows=49 -->
 ```sql
 SELECT * FROM person WHERE hair = 'Black'
 ```
@@ -146,14 +146,14 @@ SELECT * FROM person WHERE is_male=1
 <details>
 <summary>Check your results</summary>
 <p>
-The query should return 25 rows.
+The query should return 23 rows.
 </p>
 </details>
 
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: rows=25 -->
+<!-- sql-test: rows=23 -->
 ```sql
 SELECT * FROM person
 WHERE is_male=1 AND hair='Black'

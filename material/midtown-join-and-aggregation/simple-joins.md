@@ -390,14 +390,14 @@ WHERE t.description = 'Car rental 66-B4-79'
 <details>
 <summary>Check your results</summary>
 <p>
-Aaron Slater is on the top of the results.
+Bart Hawking is on the top of the results.
 </p>
 </details>
 
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: first_name=Aaron; last_name=Slater -->
+<!-- sql-test: first_name=Bart; last_name=Hawking -->
 ```sql
 SELECT t.*, p.first_name, p.last_name 
 FROM transfer t 
@@ -411,7 +411,7 @@ ORDER BY DATE DESC
 <details>
 <summary>Solution with top 1</summary>
 
-<!-- sql-test: rows=1; first_name=Aaron; last_name=Slater -->
+<!-- sql-test: rows=1; first_name=Bart; last_name=Hawking -->
 ```sql
 SELECT TOP 1 t.*, p.first_name, p.last_name 
 FROM transfer t 
