@@ -8,19 +8,7 @@ If you are familiar with the topic, read the story line, exercises and solutions
 > the relevant records.
 
 **Exercise 1**: Before doing any change on the database, make a backup of the database. This is a 
-saved copy of the database in a file, which can be used to restore (put back) the data which are in it at the moment of creation of the backup. Backups are often used to prepare for the worst case, when data is lost or corrupted.
-
-**Hints**:
-
-* Right click on the database you want to save, and click on Tasks -> Backup. Default settings are proper in most cases (full backup).
-
-<details>
-<summary>Solution</summary>
-<p>
-<img src="images/create-backup.png" alt="Back up option in SSMS"/>
-</p>
-</details>
-<br />
+saved copy of the database in a file, which can be used to restore (put back) the data which are in it at the moment of creation of the backup. For SQLite all that is needed is to copy the `*.sqlite` to another file, e.g. `*_backup.sqlite`). Restoring it then simply copying the `_backup.sqlite` over the original file.
 
 <!-- blank line -->
 ----
@@ -86,10 +74,10 @@ OR first_name = 'Cindy') AND last_name = 'Klein'
 
 UPDATE person
 SET last_name = 'Kleiner'
-WHERE person_id IN ('398E6049-79CB-5B4E-9B36-E8C685E8543B', '73CFED84-EEF9-864F-BBC2-51D1A1C0B897')
+WHERE person_id IN ('398e6049-79cb-5b4e-9b36-e8c685e8543b', '73cfed84-eef9-864f-bbc2-51d1a1c0b897')
 
 SELECT * FROM person
-WHERE person_id IN ('398E6049-79CB-5B4E-9B36-E8C685E8543B', '73CFED84-EEF9-864F-BBC2-51D1A1C0B897')
+WHERE person_id IN ('398e6049-79cb-5b4e-9b36-e8c685e8543b', '73cfed84-eef9-864f-bbc2-51d1a1c0b897')
 ```
 </details>
 <br />
@@ -110,7 +98,7 @@ WHERE person_id IN ('398E6049-79CB-5B4E-9B36-E8C685E8543B', '73CFED84-EEF9-864F-
 ```sql
 UPDATE person
 SET last_name = 'Klein'
-WHERE person_id IN ('398E6049-79CB-5B4E-9B36-E8C685E8543B', '73CFED84-EEF9-864F-BBC2-51D1A1C0B897')
+WHERE person_id IN ('398e6049-79cb-5b4e-9b36-e8c685e8543b', '73cfed84-eef9-864f-bbc2-51d1a1c0b897')
 ```
 </details>
 <br />
@@ -128,7 +116,7 @@ WHERE (first_name = 'Hans' OR first_name = 'Cindy') AND last_name = 'Klein';
 
 | **Note**    |
 | ----------- |
-|When you do the same update from an application (like in a cleanstep in TOPdesk), performance becomes an issue. If you did a select first and then an update, the intermediate result set can be huge in memory in case of many records. It's a good practice to do that in one single query.|
+|When you do the same update from an application, performance becomes an issue. If you did a select first and then an update, the intermediate result set can be huge in memory in case of many records. It's a good practice to do that in one single query.|
 
 <!-- blank line -->
 ----
@@ -263,15 +251,5 @@ WHERE (first_name = 'Otto' AND last_name = 'Herz')
 
 **Hints**:
 
-* Right click on the database you want to restore, and click on Tasks -> Restore -> Database. Default settings are proper in most cases (Query windows can not be opened during the restore process).
-* In case of error, you can check the error message in the bottom left corner. If it says there are open connections to the database, disconnect your own session(s) from it. You can do it by changing current database in the top left corner to master in your Query window(s).
-* If it still doesn't allow restoring, it might be because of some lingering connections. Normally you should check who is connected to the database, but this time - as this is your own database - it doesn't hurt to kick out everyone else. You can do that on the Options page by enabling Close existing connections.
-
-<details>
-<summary>Solution</summary>
-
-<p>
-<img src="images/restore-database.png" alt="Restore database"/>
-</p>
-</details>
-
+* If you are using the database on your disk, restore it by taking your backup file and copy it over your database .sqlite file.
+* In SQLite Viewer App, Close the database and re-import the original file that you Downloaded in the Connect to your Database section.
