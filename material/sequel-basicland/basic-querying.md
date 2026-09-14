@@ -71,10 +71,6 @@ SELECT DISTINCT hair FROM person
 
 **Exercise 3**: Make a list of persons with black hair.
 
-| **Trick**   |
-| ----------- |
-| You can have multiple commands in the Query window, just select the commands you want to run, and then Execute/F5 will execute only that one (otherwise everything). Details: <a href="https://wiki.topdesk.com/wiki/Intro_to_MS_SQL_Management_Studio#6._Handle_multiple_queries_in_the_editor">Handle multiple queries in the editor</a>.|
-
 **Hints**:
 
 * `WHERE` condition can be added to the query: `SELECT * FROM tablename WHERE columnname = value`
