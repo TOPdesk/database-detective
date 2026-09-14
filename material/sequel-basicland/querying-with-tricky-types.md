@@ -52,19 +52,19 @@ SELECT CURRENT_TIMESTAMP
 ```sql
 SELECT CURRENT_TIMESTAMP AS currentdate
 ```
-* SQLite does not have `DATEDIFF`. For rough age in years, compare the year parts using `strftime`:
+* For rough age in years, compare the year parts using `strftime`:
 ```sql
-SELECT CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', '1962-08-18') AS INTEGER)
+SELECT CAST (substring(timediff(CURRENT_TIMESTAMP, '1962-08-18'), 2, 4) AS INTEGER) AS years;
 ```
 * Both can be used combined with select from a table. So the name of a column can be passed as a parameter, and then it calculates the value for every selected row.
-* There are a lot of functions implemented in SQLite. The function reference is handy when you need alternatives to functions from other database systems.
+* There are a lot of functions implemented in SQLite. The [function reference](https://sqlite.org/lang_corefunc.html) is handy when you need alternatives to functions from other database systems.
 
 <details>
 <summary>Solution</summary>
 
 <!-- sql-test -->
 ```sql
-SELECT *, CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age FROM person
+SELECT *, CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) AS age FROM person
 ```
 </details>
 <br />
@@ -89,7 +89,7 @@ SELECT
     first_name, 
     last_name, 
     date_of_birth, 
-    CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age 
+    CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) AS age 
 FROM person
 ```
 </details>
@@ -116,7 +116,7 @@ SELECT
     first_name, 
     last_name, 
     date_of_birth, 
-    CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age 
+    CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) AS age 
 FROM person 
 ORDER BY age;
 ```
@@ -152,10 +152,10 @@ years old, I'd like to see everyone with this age, with all their data, still or
 
 <!-- sql-test: rows=22 -->
 ```sql
-SELECT *, CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age 
+SELECT *, CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) AS age 
 FROM person 
-WHERE CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) >= 20
-    AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) <= 30
+WHERE CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) >= 20
+    AND CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) <= 30
 ORDER BY age
 ```
 
@@ -195,7 +195,7 @@ columns later in the query.
 ```sql
 WITH persons_with_age (first_name, last_name, age) AS (
     SELECT first_name, last_name,
-        CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER)
+        CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER)
        FROM person
 )
 SELECT * FROM persons_with_age WHERE age >= 20 AND age <= 30
@@ -222,11 +222,11 @@ ORDER BY age;
 
 <!-- sql-test: rows=0 -->
 ```sql
-SELECT *, CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age 
+SELECT *, CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) AS age 
 FROM person 
 WHERE is_male=1 AND hair='Black' AND shoe_size = 45 
-AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) >= 20 
-AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) < 30;
+AND CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) >= 20 
+AND CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) < 30;
 ```
 </details>
 
@@ -238,7 +238,7 @@ AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', dat
 ```sql
 WITH persons_with_age (first_name, last_name, age, is_male, hair, shoe_size) AS (
     SELECT first_name, last_name,
-        CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER),
+        CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER),
         is_male, hair, shoe_size
        FROM person
 )
@@ -288,11 +288,11 @@ In SQL, `AND` has a higher precedence than `OR`. If you want to change the defau
 
 <!-- sql-test: rows=1; first_name=Martin; last_name=Walsh -->
 ```sql
-SELECT *, CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age 
+SELECT *, CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) AS age 
 FROM person 
 WHERE is_male=1 AND (hair='Black' OR hair IS NULL) AND (shoe_size = 45 OR shoe_size IS NULL) 
-AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) >= 20 
-AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) < 30;
+AND CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) >= 20 
+AND CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) < 30;
 ```
 </details>
 
@@ -303,7 +303,7 @@ AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', dat
 ```sql
 WITH persons_with_age (first_name, last_name, age, is_male, hair, shoe_size) AS (
     SELECT first_name, last_name,
-           CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER),
+           CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER),
            is_male, hair, shoe_size
     FROM person
 )
@@ -320,13 +320,13 @@ ORDER BY age;
 <!-- sql-test: rows=1; first_name=Martin; last_name=Walsh -->
 ```sql
 SELECT first_name, last_name, is_male, hair, shoe_size,
-       CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) AS age
+       CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) AS age
 FROM person
 WHERE is_male = 1
 AND (hair = 'Black' OR hair IS NULL)
 AND (shoe_size = 45 OR shoe_size IS NULL)
-AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) >= 20
-AND CAST(strftime('%Y', CURRENT_TIMESTAMP) AS INTEGER) - CAST(strftime('%Y', date_of_birth) AS INTEGER) < 30
+AND CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) >= 20
+AND CAST (substring(timediff(CURRENT_TIMESTAMP, date_of_birth), 2, 4) AS INTEGER) < 30
 ORDER BY age;
 ```
 
