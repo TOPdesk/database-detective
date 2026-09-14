@@ -3,6 +3,7 @@ site_url: https://topdesk.github.io/database-detective/
 nav:
   - 'Map': 'index.md'
   - 'Intro Street':
+    - 'Connecto to your database': intro-street/connect-to-your-database.md
     - 'Read basics': intro-street/read-basics.md
   - 'Sequel Basicland':
     - 'Basic querying': sequel-basicland/basic-querying.md
