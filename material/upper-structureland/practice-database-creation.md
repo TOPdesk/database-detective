@@ -8,7 +8,7 @@ If you are on the fast track, read and execute the script in the Solution sectio
 **Hints**:
 
 * Define types.
-* A primary key is commonly defined as `INT` (auto-incremented during an insert by the database), or a `UNIQUEIDENTIFIER`. An auto-incremented int can be built up by the `IDENTITY` keyword. `UNIQUEIDENTIFIER` can be defaulted by using the embedded function `NEWID()`, which returns a random uuid.
+* In SQLite, an auto-incrementing primary key is typically defined as `INTEGER PRIMARY KEY AUTOINCREMENT`.
 * Use foreign keys to enforce relations between columns.
 * Define `NULL/NOT NULL` for the columns.
 * Many different solutions exist.
@@ -22,34 +22,34 @@ If you are on the fast track, read and execute the script in the Solution sectio
 <!-- sql-test -->
 ```sql
 CREATE TABLE person(
-id INT IDENTITY NOT NULL,
-first_name NVARCHAR(50) NULL,
-last_name NVARCHAR(50) NULL,
-date_of_birth DATE NULL,
-CONSTRAINT pk_person_id PRIMARY KEY (id))
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+first_name TEXT NULL,
+last_name TEXT NULL,
+date_of_birth DATE NULL
+)
 
 CREATE TABLE sample(
-id INT IDENTITY NOT NULL,
-place_collected NVARCHAR(200) NULL,
-time_collected DATETIME2 NULL,
-person_id INT NULL,
-CONSTRAINT fk_sample_person FOREIGN KEY (person_id) REFERENCES person(id),
-CONSTRAINT pk_sample_id PRIMARY KEY (id))
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+place_collected TEXT NULL,
+time_collected DATETIME NULL,
+person_id INTEGER NULL,
+CONSTRAINT fk_sample_person FOREIGN KEY (person_id) REFERENCES person(id)
+)
 
 CREATE TABLE locus(
-id INT IDENTITY NOT NULL,
-name VARCHAR(20) NOT NULL,
-CONSTRAINT locus_name_unique UNIQUE (name),
-CONSTRAINT pk_locus_id PRIMARY KEY (id))
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+name TEXT NOT NULL,
+CONSTRAINT locus_name_unique UNIQUE (name)
+)
 
 CREATE TABLE peak(
-id INT IDENTITY NOT NULL,
-locus_id INT NOT NULL,
-sample_id INT NOT NULL,
-value INT NOT NULL,
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+locus_id INTEGER NOT NULL,
+sample_id INTEGER NOT NULL,
+value INTEGER NOT NULL,
 CONSTRAINT fk_peak_locus FOREIGN KEY (locus_id) REFERENCES locus(id),
-CONSTRAINT fk_peak_sample FOREIGN KEY (sample_id) REFERENCES sample(id),
-CONSTRAINT pk_peak_id PRIMARY KEY (id))
+CONSTRAINT fk_peak_sample FOREIGN KEY (sample_id) REFERENCES sample(id)
+)
 ```
 </details>
 
@@ -61,6 +61,6 @@ CONSTRAINT pk_peak_id PRIMARY KEY (id))
 
 **Hints**:
 
-* MS SQL offers a visual editor for this (can be generated from the existing tables): expand your database in Object explorer on the left, right click on Database Diagrams (click Yes if it's asking for permission), click on New Database Diagram. Select all your tables.
+* Use a SQLite-capable client with schema visualization (for example, SQLiteStudio or DB Browser for SQLite) to inspect and diagram tables.
 * A diagram is generated. Tables can be moved manually, and it can be configured what kind of data to show on it. 
-* If you receive an error saying 'Could not obtain information about Windows NT group/user ..., error code 0x54b. (Microsoft SQL Server, Error: 15404)', then you bumped into a known issue with SQL Server. The reason is that for creating diagrams, the database owner must be a static user of the database, and cannot be a user logged in with Windows authentication. The workaround is: right click on the name of your database in Object Explorer, Properties, Files page on the left, set the owner by clicking on ... at end of the line, Browse..., and choose a normal user (which is not NT or ##MS, but can be sa on your own server), Ok, Ok, Ok. This can be changed back once you are not working with the diagrams anymore.
+* If your SQL client cannot generate diagrams automatically, export the schema and use a separate diagramming tool.

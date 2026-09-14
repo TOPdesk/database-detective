@@ -3,7 +3,7 @@
 **Fast track**: In this field, you will read about data modeling, i.e. how to break down the user requirements to diagrams, which can then be converted to a database. We introduce terms like **entities**, **relations** to show examples on how to make **entity-relationship diagrams** on different levels of details. You will also read about different types of relationships.  
 You can save time by reading it fast, just to get a grasp of what these terms are.
 
-**Exercise**: Read about data modeling, as we will follow this path to implement the database structure in MS SQL on the next field.
+**Exercise**: Read about data modeling, as we will follow this path to implement the database structure in SQLite in the next field.
 
 #### Entities and relations
 From the business needs we can easily get to the database structure via an entity-relationship model (ER model). How?
