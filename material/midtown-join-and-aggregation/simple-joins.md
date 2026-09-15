@@ -355,7 +355,7 @@ WHERE description = 'Car rental 66-B4-79'
 <details>
   <summary>See the model here</summary>
   <p>
-  <img src="images/dba_detective_database_structure.png" alt="Entity Relationship Diagram"/>
+  <a href="images/dba_detective_database_structure.png"><img src="images/dba_detective_database_structure.png" alt="Entity Relationship Diagram"/></a>
   </p>
 </details>
 
