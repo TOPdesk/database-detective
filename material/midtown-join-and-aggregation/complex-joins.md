@@ -82,7 +82,7 @@ JOIN phone AS p2 ON p2.some_field = c.another_field
 
 <!-- sql-test: rows=1 -->
 ```sql
-SELECT c.time, c.to_phone_number, c.from_phone_number, from_person.first_name, from_person.last_name, to_person.first_name, to_person.last_name
+SELECT c.time, c.to_phone_number, c.from_phone_number, from_person.first_name as from_first_name, from_person.last_name as from_last_name, to_person.first_name as to_first_name, to_person.last_name as to_last_name
 FROM call AS c
 JOIN phone AS fph ON fph.phone_number = c.from_phone_number
 JOIN phone AS tph ON tph.phone_number = c.to_phone_number
