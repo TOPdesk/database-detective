@@ -37,10 +37,10 @@ saved copy of the database in a file, which can be used to restore (put back) th
 ```sql
 UPDATE person
 SET hair = 'Black'
-WHERE first_name = 'Kira' AND last_name = 'Murray'
+WHERE first_name = 'Kira' AND last_name = 'Murray';
 
 SELECT * FROM person
-WHERE first_name = 'Kira' AND last_name = 'Murray'
+WHERE first_name = 'Kira' AND last_name = 'Murray';
 ```
 </details>
 <br />
@@ -70,14 +70,14 @@ In this exercise, do it in 3 steps, so that you see what's going on:
 ```sql
 SELECT * FROM person
 WHERE (first_name = 'Hans'
-OR first_name = 'Cindy') AND last_name = 'Klein'
+OR first_name = 'Cindy') AND last_name = 'Klein';
 
 UPDATE person
 SET last_name = 'Kleiner'
-WHERE person_id IN ('398e6049-79cb-5b4e-9b36-e8c685e8543b', '73cfed84-eef9-864f-bbc2-51d1a1c0b897')
+WHERE person_id IN ('398e6049-79cb-5b4e-9b36-e8c685e8543b', '73cfed84-eef9-864f-bbc2-51d1a1c0b897');
 
 SELECT * FROM person
-WHERE person_id IN ('398e6049-79cb-5b4e-9b36-e8c685e8543b', '73cfed84-eef9-864f-bbc2-51d1a1c0b897')
+WHERE person_id IN ('398e6049-79cb-5b4e-9b36-e8c685e8543b', '73cfed84-eef9-864f-bbc2-51d1a1c0b897');
 ```
 </details>
 <br />
