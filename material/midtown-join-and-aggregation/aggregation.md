@@ -41,7 +41,7 @@ If you are on the fast track, check out the story line and the exercises with th
 <details>
   <summary>Whenever you need to remember the entity relations, check out the Entity-Relationship Diagram here.</summary>
   <p>
-  <img src="images/dba_detective_database_structure.png" alt="Entity Relationship Diagram"/>
+  <a href="images/dba_detective_database_structure.png"><img src="images/dba_detective_database_structure.png" alt="Entity Relationship Diagram"/></a>
   </p>
 </details>
 
