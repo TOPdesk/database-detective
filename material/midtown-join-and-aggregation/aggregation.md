@@ -119,7 +119,7 @@ SELECT contra_IBAN, SUM(amount) AS SUM
 
 | **Note**    |
 | ----------- |
-| Putting arbitrary columns in the column list (like `SELECT cluster_id`) would throw an error. This is not surprising, as many rows are aggregated in that one line, and only the group by column and the aggregated column has one single value in the group. When there is a `GROUP BY` in a query, every field in the column list must be either aggregated, or listed in `GROUP BY`.| 
+| Putting arbitrary columns in the column list (like `SELECT name`) would throw an error. This is not surprising, as many rows are aggregated in that one line, and only the group by column and the aggregated column has one single value in the group. When there is a `GROUP BY` in a query, every field in the column list must be either aggregated, or listed in `GROUP BY`.| 
 
 
 <!-- blank line -->
