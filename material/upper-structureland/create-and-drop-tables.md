@@ -3,7 +3,7 @@
 **Fast track**: In this field, you will learn how to create your own database, and the basic keywords for creating and dropping tables in SQLite (`CREATE TABLE`, `DROP TABLE`).  
 If you are on the fast track, just create your own database (Exercise 1) and execute creation and dropping once by copying the solution to your Query window. Read the framed notes as well.
 
-**Exercise 1**: Create a new playground database, which you can use for the exercises in Upper-Structureland. Prefix it with your own userid, so that it doesn’t get mixed with the others’ databases on the same server.
+**Exercise 1**: Create a new playground database, which you can use for the exercises in Upper-Structureland. In SQLiteView "Close" your current database and then select "Load sample DB".
 
 <!-- blank line -->
 ----
@@ -42,10 +42,6 @@ date_of_birth DATE NULL
 </details>
 <br />
 
-| **Note**    |
-| ----------- |
-| Before further progressing with the queries, it's worth to save the contents of the query window into an sql file, and regularly save. |
-
 <!-- blank line -->
 ----
 <!-- blank line -->
@@ -72,8 +68,4 @@ DROP TABLE person
 
 | **Note**    |
 | ----------- |
-| While `DELETE` deletes the content of your table; `DROP` deletes the table itself. |
-
-| **Note**    |
-| ----------- |
-| Try to execute drop tables again. You'll see error messages, but it doesn't do any harm. |
+| While `DELETE` deletes the content of your table; `DROP` deletes the table itself. The interface of SQLiteView confusingly (and incorrectly) talks about "deleting" a table. |

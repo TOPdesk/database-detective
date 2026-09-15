@@ -6,12 +6,12 @@ This avoids the needs to do a lot of setup.
 
 First, you need a copy of the database we will use. 
 Use the following download link and save the file somewhere you can find it back.
-It is less than 5Mb.
+It is less than 7Mb.
 
 [Download](./dbadetective-v4-20260915.sqlite)
 
 Next, upload the database again on [sqliteview.com](https://www.sqliteview.com/).
-Here you will be able to browse the database, run queries and see the results. 
+Here you will be able to browse the database, run queries through the "SQL Query Editor" and see the results. 
 We will use [sqliteview.com](https://www.sqliteview.com/) throughout this workshop.
 
 <!-- blank line -->

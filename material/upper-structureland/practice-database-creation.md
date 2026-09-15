@@ -12,9 +12,6 @@ If you are on the fast track, read and execute the script in the Solution sectio
 * Use foreign keys to enforce relations between columns.
 * Define `NULL/NOT NULL` for the columns.
 * Many different solutions exist.
-**Hints**:
-
-* Use the Object explorer to check you achieved what you wanted. Table creation or any modification on the structure cannot be undone, but you can drop a table and recreate it anytime, if you always save your work into an sql file.
 
 <details>
 <summary>Solution</summary>
@@ -26,7 +23,7 @@ id INTEGER PRIMARY KEY AUTOINCREMENT,
 first_name TEXT NULL,
 last_name TEXT NULL,
 date_of_birth DATE NULL
-)
+);
 
 CREATE TABLE sample(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,13 +31,13 @@ place_collected TEXT NULL,
 time_collected DATETIME NULL,
 person_id INTEGER NULL,
 CONSTRAINT fk_sample_person FOREIGN KEY (person_id) REFERENCES person(id)
-)
+);
 
 CREATE TABLE locus(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL,
 CONSTRAINT locus_name_unique UNIQUE (name)
-)
+);
 
 CREATE TABLE peak(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,7 +46,7 @@ sample_id INTEGER NOT NULL,
 value INTEGER NOT NULL,
 CONSTRAINT fk_peak_locus FOREIGN KEY (locus_id) REFERENCES locus(id),
 CONSTRAINT fk_peak_sample FOREIGN KEY (sample_id) REFERENCES sample(id)
-)
+);
 ```
 </details>
 

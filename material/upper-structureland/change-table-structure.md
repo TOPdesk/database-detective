@@ -20,7 +20,7 @@ ADD <columnname> <columntype> <nullability>
 <!-- sql-test -->
 ```sql
 ALTER TABLE person
-ADD number_of_siblings INT NULL
+ADD weight_kg INT NULL
 ```
 </details>
 
