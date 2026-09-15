@@ -139,7 +139,6 @@ INSERT INTO tablename (column1, column2, ...)
 * A date can be inserted in a format like '1900-01-01'
 * Every mandatory field has to be added, otherwise database will throw an error. Experiment with it.
 * For SQLite, use explicit UUID strings for person_id values.
-* cluster_id is a special column: it is mandatory, but the database will set it, as it's constructed that way. This will be explained in depth in Structureland.
 * You can create the two rows with 2 separate insert statement or by just 1 combined insert:
 ```sql
 INSERT INTO tablename (column1, column2, ...) VALUES
