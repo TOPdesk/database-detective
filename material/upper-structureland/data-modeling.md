@@ -73,4 +73,4 @@ Typical relations:
 *References*:  
 
 * [Conceptual, Logical & Physical Data Models on Youtube](https://www.youtube.com/watch?v=RJ9TpkWKyU0)
-* [More information from a book on database design](https://port.sas.ac.uk/mod/book/view.php?id=75&chapterid=140)
+* [More information from a book on database design](https://www.scribd.com/document/644309812/Designing-Databases-for-Historical-Research)
