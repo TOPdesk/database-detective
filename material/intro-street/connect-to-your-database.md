@@ -20,14 +20,14 @@ We will use [sqliteview.com](https://www.sqliteview.com/) throughout this worksh
 
 **Check your work:**
 
-Make a test query to check the environment works. Look at the list of the tables.
+In sqliteview, you can look at the list of the tables in the sidebar on the left. You can browse their contents.
 
-Open SSMS (Windows) or Azure Data Studio (if you have Linux) and run a query against your dbadetective database. For example, you could run a query like:
+You can also write queries. Open the "SQL Query Editor" (item on the left), and enter a query like:
 
 <!-- sql-test: count=164 -->
 ```sql
 SELECT COUNT(*) as count FROM person
 ```
 
-Run the query. This should give you a number as result (`164` for dbadetective-v4).
+And click the "Run SQL" Button. This should give you a number as result (`164` for dbadetective-v4).
 
