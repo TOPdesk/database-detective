@@ -19,6 +19,8 @@ nav:
     - 'Create and drop tables': upper-structureland/create-and-drop-tables.md
     - 'Practice database creation': upper-structureland/practice-database-creation.md
     - 'Change table structure': upper-structureland/change-table-structure.md
+  - 'About':
+    - 'Credits': credits.md
 
 docs_dir: material
 site_dir: public
