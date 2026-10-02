@@ -383,9 +383,15 @@ WHERE t.description = 'Car rental 66-B4-79'
 * You can use the `ORDER BY` clause at the end to choose which field to order on like so: `SELECT ... WHERE ... ORDER BY sort-field`
 * By default, the data is sorted in ascending order, to sort descending, use the `DESC` keyword like so: `SELECT ... WHERE ... ORDER BY field DESC`
 
+{% if variant == "duckdb" %}
+| **Note**    |
+| ----------- |
+| You can make it even nicer by adding `LIMIT 1` at the end to only show the record with the highest date. |
+{% else %}
 | **Note**    |
 | ----------- |
 | You can make it even nicer by adding `TOP 1` to only show the record with the highest date. |
+{% endif %}
 
 <details>
 <summary>Check your results</summary>
@@ -408,10 +414,26 @@ ORDER BY DATE DESC
 ```
 </details>
 
+{% if variant == "duckdb" %}
+<details>
+<summary>Solution with limit 1</summary>
+
+<!-- sql-test: variant=duckdb; rows=1; first_name=Bart; last_name=Hawking -->
+```sql
+SELECT t.*, p.first_name, p.last_name 
+FROM transfer t 
+JOIN account_person ap ON t.IBAN = ap.IBAN 
+JOIN person p ON ap.person_id = p.person_id 
+WHERE t.description = 'Car rental 66-B4-79' 
+ORDER BY DATE DESC
+LIMIT 1
+```
+</details>
+{% else %}
 <details>
 <summary>Solution with top 1</summary>
 
-<!-- sql-test: rows=1; first_name=Bart; last_name=Hawking -->
+<!-- sql-test: variant=mssql; rows=1; first_name=Bart; last_name=Hawking -->
 ```sql
 SELECT TOP 1 t.*, p.first_name, p.last_name 
 FROM transfer t 
@@ -421,6 +443,7 @@ WHERE t.description = 'Car rental 66-B4-79'
 ORDER BY DATE DESC
 ```
 </details>
+{% endif %}
 
 >
 > There was an eerie silence - the silence before a storm.

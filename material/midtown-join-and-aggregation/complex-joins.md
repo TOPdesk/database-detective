@@ -77,10 +77,29 @@ JOIN phone AS p1 ON p1.some_field = c.other_field
 JOIN phone AS p2 ON p2.some_field = c.another_field
 ```
 
+{% if variant == "duckdb" %}
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: rows=1 -->
+<!-- sql-test: variant=duckdb; rows=1 -->
+```sql
+SELECT c.time, c.to_phone_number, c.from_phone_number, from_person.first_name, from_person.last_name, to_person.first_name, to_person.last_name
+FROM call AS c
+JOIN phone AS fph ON fph.phone_number = c.from_phone_number
+JOIN phone AS tph ON tph.phone_number = c.to_phone_number
+JOIN person AS from_person ON from_person.person_id = fph.person_id
+JOIN person AS to_person ON to_person.person_id = tph.person_id
+WHERE to_person.first_name = 'Peter' AND to_person.last_name='Patrelli'
+AND tph.make = 'Sony'
+ORDER BY time DESC
+LIMIT 1
+```
+</details>
+{% else %}
+<details>
+<summary>Solution</summary>
+
+<!-- sql-test: variant=mssql; rows=1 -->
 ```sql
 SELECT TOP 1 c.time, c.to_phone_number, c.from_phone_number, from_person.first_name, from_person.last_name, to_person.first_name, to_person.last_name
 FROM call AS c
@@ -93,6 +112,7 @@ AND tph.make = 'Sony'
 ORDER BY time DESC
 ```
 </details>
+{% endif %}
 
 <!-- blank line -->
 ----
