@@ -3,7 +3,7 @@
 **Fast track**: In this field, you will practice how to add a new column to an existing table by using `ALTER TABLE`.  
 If you are on the fast track, read and execute the Solution to make the change, and read the framed note.
 
-**Exercise 1**: Add a new column called weight_kg to the person table, without dropping and recreating the table.
+**Exercise 1**: Add a new column called number_of_siblings to the person table, without dropping and recreating the table.
 
 **Hints**:
 
@@ -30,4 +30,8 @@ ADD number_of_siblings INT NULL
 | ----------- |
 | `ALTER TABLE` is a very diverse command, it can change/add new columns, change types, nullability, rename columns etc. | 
 
+{% if variant == "duckdb" %}
+**Exercise 2**: Check the new structure visually in your DuckDB client, and check the table content.
+{% else %}
 **Exercise 2**: Check the new structure visually in Object explorer, and check the table content.
+{% endif %}
