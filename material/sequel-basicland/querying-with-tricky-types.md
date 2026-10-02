@@ -13,9 +13,13 @@ If you are on the fast track and know about these, read the story line, exercise
 **Hints**:
 
 * A condition can use different operators like `=`, `<`, `<=`, `>`, `>=`, `<>`.
+{% if variant == "duckdb" %}
+* Filtering on dates is similar to filtering on texts: use quotes. DuckDB expects the SQL standard `YYYY-MM-DD` format, and rejects ambiguous formats outright.
+{% else %}
 * Filtering on dates is similar to filtering on texts: use quotes. Multiple recognizable formats 
 are accepted by MS SQL in regards of the day-month-year order, and the SQL standard is YYYY-MM-DD. Make sure month and day are not 
 mixed up. [(complete list of all possible format)](https://docs.microsoft.com/en-us/sql/t-sql/data-types/date-transact-sql?view=sql-server-ver15)
+{% endif %}
 
 <details>
 <summary>Solution</summary>
@@ -31,8 +35,13 @@ WHERE date_of_birth >= '1998/01/01'
 <details>
 <summary>A few alternatives to the date</summary>
 <p>
+{% if variant == "duckdb" %}
+'1998-01-01' works just as well.<br>
+'01/01/1998' does not: DuckDB rejects it outright instead of guessing which part is the day and which is the month.<br>
+{% else %}
 '01/01/1998'<br>
 '1998-01-01'<br>
+{% endif %}
 </p>
 </details>
 <br />
@@ -46,6 +55,22 @@ Let the query calculate it for every person.
 
 **Hints**:
 
+{% if variant == "duckdb" %}
+* There is a function called `CURRENT_DATE` which returns the current date. Try this:
+```sql
+SELECT CURRENT_DATE
+```
+* A calculated value like `CURRENT_DATE` can be printed and used in a format of a column, by giving a name for it:
+```sql
+ SELECT CURRENT_DATE AS currentdate
+```
+* There is another function called `datediff`, which has 3 parameters: a unit of time, a start date and an end date. It calculates the difference between 2 dates in the given time unit. Try this:
+```sql
+SELECT datediff('year', '1962-08-18', CURRENT_DATE)
+```
+* Both can be used combined with select from a table. So the name of a column can be passed as a parameter, and then it calculates the value for every selected row.
+* There are a lot of functions implemented in DuckDB. There are so-called reference guides to find the one you need. See for example the [DuckDB documentation](https://duckdb.org/docs/).
+{% else %}
 * There is a function called `GETDATE()` which returns the current date. Try this:
 ```sql
 SELECT GETDATE()
@@ -60,14 +85,22 @@ SELECT DATEDIFF(year, '1962-08-18', GETDATE())
 ```
 * Both can be used combined with select from a table. So the name of a column can be passed as a parameter, and then it calculates the value for every selected row.
 * There are a lot of functions implemented in MS SQL. There are so-called reference guides to find the one you need. See for example: [datediff in Microsoft's T-SQL documentation](https://docs.microsoft.com/en-us/sql/t-sql/functions/datediff-transact-sql)
+{% endif %}
 
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test -->
+{% if variant == "duckdb" %}
+<!-- sql-test: variant=duckdb -->
+```sql
+SELECT *, datediff('year', date_of_birth, CURRENT_DATE) FROM person
+```
+{% else %}
+<!-- sql-test: variant=mssql -->
 ```sql
 SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) FROM person
 ```
+{% endif %}
 </details>
 <br />
 
@@ -84,7 +117,19 @@ SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) FROM person
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test -->
+{% if variant == "duckdb" %}
+<!-- sql-test: variant=duckdb -->
+```sql
+SELECT 
+    person_id, 
+    first_name, 
+    last_name, 
+    date_of_birth, 
+    datediff('year', date_of_birth, CURRENT_DATE) AS age 
+FROM person
+```
+{% else %}
+<!-- sql-test: variant=mssql -->
 ```sql
 SELECT 
     person_id, 
@@ -94,6 +139,7 @@ SELECT
     DATEDIFF(year, date_of_birth, GETDATE()) AS age 
 FROM person
 ```
+{% endif %}
 </details>
 <br />
 
@@ -111,7 +157,20 @@ FROM person
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test -->
+{% if variant == "duckdb" %}
+<!-- sql-test: variant=duckdb -->
+```sql
+SELECT 
+    person_id, 
+    first_name, 
+    last_name, 
+    date_of_birth, 
+    datediff('year', date_of_birth, CURRENT_DATE) AS age 
+FROM person 
+ORDER BY age;
+```
+{% else %}
+<!-- sql-test: variant=mssql -->
 ```sql
 SELECT 
     person_id, 
@@ -122,6 +181,7 @@ SELECT
 FROM person 
 ORDER BY age;
 ```
+{% endif %}
 </details>
 <br />
 
@@ -132,9 +192,15 @@ ORDER BY age;
 **Exercise 5**: Still too much... The eyewitness said she saw someone between 20 and 30 
 years old, I'd like to see everyone with this age, with all their data, still ordered by age.
 
+{% if variant == "duckdb" %}
+| **Note**    |
+| ----------- |
+| Most databases don't allow usage of user-defined names of columns in the `WHERE` condition, as `WHERE` is conceptually processed before the custom name of a column is assigned. DuckDB is a lenient exception and actually allows it, but we'll avoid relying on that below, since the technique the next exercises build towards (CTEs) works everywhere. |
+{% else %}
 | **Note**    |
 | ----------- |
 | MS SQL does not allow usage of user-defined names of columns in the `WHERE` condition, as `WHERE` condition is parsed before the custom name of a column. Example: `SELECT first_name AS custom_name FROM person WHERE custom_name = 'Zelda'` -> this leads to a syntax error.|
+{% endif %}
 
 <!-- blank line -->
 ----
@@ -152,7 +218,18 @@ years old, I'd like to see everyone with this age, with all their data, still or
 <details>
 <summary>Solution with repeated calculation</summary>
 
-<!-- sql-test: rows=22 -->
+{% if variant == "duckdb" %}
+<!-- sql-test: variant=duckdb; rows=22 -->
+```sql
+SELECT *, datediff('year', date_of_birth, CURRENT_DATE) AS age 
+FROM person 
+WHERE datediff('year', date_of_birth, CURRENT_DATE) >= 20 AND datediff('year', date_of_birth, CURRENT_DATE) <= 30
+ORDER BY age
+```
+
+You may be wondering why it's not possible to refer to the `age` alias again in the `WHERE` clause, in most databases: conceptually, `WHERE` is processed before `SELECT`, so the alias doesn't exist yet. (Oracle and DuckDB are lenient exceptions that let you do it anyway, but relying on that wouldn't work everywhere.)
+{% else %}
+<!-- sql-test: variant=mssql; rows=22 -->
 ```sql
 SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) AS age 
 FROM person 
@@ -161,6 +238,7 @@ ORDER BY age
 ```
 
 You may be wondering why it's not possible to refer to the `age` alias again in the `WHERE` clause. The answer is, that there is no good reason for this limitation. Oracle supports this, SQL Server doesn't.
+{% endif %}
 
 Due to the repetition, it's not advisable to use this query in production. The next exercise shows a better way.
 </details>
@@ -169,7 +247,7 @@ Due to the repetition, it's not advisable to use this query in production. The n
 ----
 <!-- blank line -->
 
-**Exercise 5b**: Make it more efficient: eliminate repetition of the calculation. SQL Server offers the so-called Common Table Expression (CTE) for this situation.
+**Exercise 5b**: Make it more efficient: eliminate repetition of the calculation. SQL offers the so-called Common Table Expression (CTE) for this situation.
 
 **Note**:
 
@@ -192,7 +270,18 @@ columns later in the query.
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test: rows=22 -->
+{% if variant == "duckdb" %}
+<!-- sql-test: variant=duckdb; rows=22 -->
+```sql
+WITH persons_with_age (first_name, last_name, age) AS (
+       SELECT first_name, last_name, datediff('year', date_of_birth, CURRENT_DATE)
+       FROM person
+)
+SELECT * FROM persons_with_age WHERE age >= 20 AND age <= 30
+ORDER BY age;
+```
+{% else %}
+<!-- sql-test: variant=mssql; rows=22 -->
 ```sql
 WITH persons_with_age (first_name, last_name, age) AS (
        SELECT first_name, last_name, DATEDIFF(year, date_of_birth, GETDATE())
@@ -201,6 +290,7 @@ WITH persons_with_age (first_name, last_name, age) AS (
 SELECT * FROM persons_with_age WHERE age >= 20 AND age <= 30
 ORDER BY age;
 ```
+{% endif %}
 </details>
 <br />
 
@@ -220,7 +310,17 @@ ORDER BY age;
 <details>
 <summary>Solution 1</summary>
 
-<!-- sql-test: rows=0 -->
+{% if variant == "duckdb" %}
+<!-- sql-test: variant=duckdb; rows=0 -->
+```sql
+SELECT *, datediff('year', date_of_birth, CURRENT_DATE) AS age 
+FROM person 
+WHERE is_male=1 AND hair='Black' AND shoe_size = 45 
+AND datediff('year', date_of_birth, CURRENT_DATE) >= 20 
+AND datediff('year', date_of_birth, CURRENT_DATE) < 30;
+```
+{% else %}
+<!-- sql-test: variant=mssql; rows=0 -->
 ```sql
 SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) AS age 
 FROM person 
@@ -228,13 +328,27 @@ WHERE is_male=1 AND hair='Black' AND shoe_size = 45
 AND DATEDIFF(year, date_of_birth, GETDATE()) >= 20 
 AND DATEDIFF(year, date_of_birth, GETDATE()) < 30;
 ```
+{% endif %}
 </details>
 
 
 <details>
 <summary>Solution 2</summary>
 
-<!-- sql-test: rows=0 -->
+{% if variant == "duckdb" %}
+<!-- sql-test: variant=duckdb; rows=0 -->
+```sql
+WITH persons_with_age (first_name, last_name, age, is_male, hair, shoe_size) AS (
+       SELECT first_name, last_name, datediff('year', date_of_birth, CURRENT_DATE), is_male, hair, shoe_size
+       FROM person
+)
+SELECT * FROM persons_with_age
+WHERE age >= 20 AND age <= 30
+AND is_male=1 AND hair='Black' AND shoe_size = 45
+ORDER BY age;
+```
+{% else %}
+<!-- sql-test: variant=mssql; rows=0 -->
 ```sql
 WITH persons_with_age (first_name, last_name, age, is_male, hair, shoe_size) AS (
        SELECT first_name, last_name, DATEDIFF(year, date_of_birth, GETDATE()), is_male, hair, shoe_size
@@ -245,6 +359,7 @@ WHERE age >= 20 AND age <= 30
 AND is_male=1 AND hair='Black' AND shoe_size = 45
 ORDER BY age;
 ```
+{% endif %}
 </details>
 
 
@@ -266,9 +381,9 @@ ORDER BY age;
 
 * A column can be set to allow empty fields. The hair property of the person table are such.
 * To filter on its emptiness or non-emptiness, use `IS NULL` or `IS NOT NULL`. This is not the same as the empty string: ''. Make experiments with it.
-* Note that the shoe_size property also can be empty (check the table columns in the Object explorer). We are interested in people who have no recorded shoe size, so add this too to the criteria. 
+* Note that the shoe_size property also can be empty (check the table's columns in your SQL client). We are interested in people who have no recorded shoe size, so add this too to the criteria. 
 * If you have both `AND` and `OR` in a `WHERE` condition, make sure they are grouped according to your needs:
-in MS SQL `AND` has a higher preference than `OR`. If you want to change the default behaviour, or just want to make the grouping of conditions 
+in SQL `AND` has a higher preference than `OR`. If you want to change the default behaviour, or just want to make the grouping of conditions 
 clear, use brackets like this: condition1 `AND` (condition2 `OR` condition3).
 
 | **Note**    |
@@ -285,7 +400,17 @@ clear, use brackets like this: condition1 `AND` (condition2 `OR` condition3).
 <details>
 <summary>Solution 1</summary>
 
-<!-- sql-test: rows=1; first_name=Martin; last_name=Walsh -->
+{% if variant == "duckdb" %}
+<!-- sql-test: variant=duckdb; rows=1; first_name=Martin; last_name=Walsh -->
+```sql
+SELECT *, datediff('year', date_of_birth, CURRENT_DATE) AS age 
+FROM person 
+WHERE is_male=1 AND (hair='Black' OR hair IS NULL) AND (shoe_size = 45 OR shoe_size IS NULL) 
+AND datediff('year', date_of_birth, CURRENT_DATE) >= 20 
+AND datediff('year', date_of_birth, CURRENT_DATE) < 30;
+```
+{% else %}
+<!-- sql-test: variant=mssql; rows=1; first_name=Martin; last_name=Walsh -->
 ```sql
 SELECT *, DATEDIFF(year, date_of_birth, GETDATE()) AS age 
 FROM person 
@@ -293,12 +418,26 @@ WHERE is_male=1 AND (hair='Black' OR hair IS NULL) AND (shoe_size = 45 OR shoe_s
 AND DATEDIFF(year, date_of_birth, GETDATE()) >= 20 
 AND DATEDIFF(year, date_of_birth, GETDATE()) < 30;
 ```
+{% endif %}
 </details>
 
 <details>
 <summary>Solution 2</summary>
 
-<!-- sql-test: rows=1; first_name=Martin; last_name=Walsh -->
+{% if variant == "duckdb" %}
+<!-- sql-test: variant=duckdb; rows=1; first_name=Martin; last_name=Walsh -->
+```sql
+WITH persons_with_age (first_name, last_name, age, is_male, hair, shoe_size) AS (
+    SELECT first_name, last_name, datediff('year', date_of_birth, CURRENT_DATE), is_male, hair, shoe_size
+    FROM person
+)
+SELECT * FROM persons_with_age
+WHERE age >= 20 AND age <= 30
+  AND is_male=1 AND (hair='Black' OR hair IS NULL) AND (shoe_size = 45 OR shoe_size IS NULL)
+ORDER BY age;
+```
+{% else %}
+<!-- sql-test: variant=mssql; rows=1; first_name=Martin; last_name=Walsh -->
 ```sql
 WITH persons_with_age (first_name, last_name, age, is_male, hair, shoe_size) AS (
     SELECT first_name, last_name, DATEDIFF(year, date_of_birth, GETDATE()), is_male, hair, shoe_size
@@ -309,12 +448,29 @@ WHERE age >= 20 AND age <= 30
   AND is_male=1 AND (hair='Black' OR hair IS NULL) AND (shoe_size = 45 OR shoe_size IS NULL)
 ORDER BY age;
 ```
+{% endif %}
 </details>
 
 <details>
 <summary>Solution 3</summary>
 
-<!-- sql-test: rows=1; first_name=Martin; last_name=Walsh -->
+{% if variant == "duckdb" %}
+DuckDB doesn't have `CROSS APPLY`, but a `LATERAL` join covers the same need: it lets a derived table on the right refer to columns from the table on its left.
+
+<!-- sql-test: variant=duckdb; rows=1; first_name=Martin; last_name=Walsh -->
+```sql
+SELECT first_name, last_name, is_male, hair, shoe_size, personCalculatedValues.age
+FROM person, LATERAL (
+    SELECT datediff('year', date_of_birth, CURRENT_DATE) AS age
+) AS personCalculatedValues
+WHERE is_male = 1
+AND (hair = 'Black' OR hair IS NULL)
+AND (shoe_size = 45 OR shoe_size IS NULL)
+AND personCalculatedValues.age >= 20 AND personCalculatedValues.age < 30
+ORDER BY personCalculatedValues.age;
+```
+{% else %}
+<!-- sql-test: variant=mssql; rows=1; first_name=Martin; last_name=Walsh -->
 ```sql
 SELECT first_name, last_name, is_male, hair, shoe_size, personCalculatedValues.age
 FROM person
@@ -327,6 +483,7 @@ AND (shoe_size = 45 OR shoe_size IS NULL)
 AND personCalculatedValues.age >= 20 AND personCalculatedValues.age < 30
 ORDER BY personCalculatedValues.age;
 ```
+{% endif %}
 
 </details>
 
