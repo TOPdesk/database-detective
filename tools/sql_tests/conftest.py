@@ -11,7 +11,10 @@ from . import extractor
 def _cases() -> list[dict]:
     files_env = os.environ.get("SQLTEST_MD_FILES")
     files = json.loads(files_env) if files_env else extractor.default_files()
-    return extractor.extract_all(files)
+    cases = extractor.extract_all(files)
+
+    variant = cfg.load_config().variant
+    return [c for c in cases if c["variant"] is None or c["variant"] == variant]
 
 
 def pytest_generate_tests(metafunc):

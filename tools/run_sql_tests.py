@@ -42,6 +42,7 @@ from sql_tests import config as cfg
 
 CLI_TO_ENV = {
     "backend": "SQLTEST_BACKEND",
+    "variant": "SQLTEST_VARIANT",
     "sqlite_path": "SQLTEST_SQLITE_PATH",
     "duckdb_path": "SQLTEST_DUCKDB_PATH",
     "mssql_host": "SQLTEST_MSSQL_HOST",
@@ -60,6 +61,12 @@ def parse_args(argv):
     )
     parser.add_argument("--env-file", default=".env", help="path to a .env file to load (default: .env)")
     parser.add_argument("--backend", choices=["sqlite", "duckdb", "mssql"], help="database backend")
+    parser.add_argument(
+        "--variant", choices=["mssql", "duckdb"],
+        help="which variant's content to test, i.e. which side of a "
+             "{%% if variant == ... %%} block (default: matches --backend; "
+             "'sqlite' backend defaults to variant-less markers only)",
+    )
     parser.add_argument("--sqlite-path", help="path to the sqlite database file")
     parser.add_argument("--duckdb-path", help="path to the duckdb database file")
     parser.add_argument("--mssql-host", help="MSSQL server host (default: localhost)")

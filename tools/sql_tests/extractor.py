@@ -17,11 +17,17 @@ invisible when the markdown is rendered.
         Assert the query returns exactly 1 row, and that row's first_name/
         last_name columns equal the given values.
 
+    <!-- sql-test: variant=duckdb; rows=22 -->
+        Only extracted/run when testing the given variant (see `variant` in
+        conftest.py). Used where the same lesson has a {% if variant == ... %}
+        block per database target (MSSQL vs DuckDB) with different SQL in
+        each branch. A marker with no `variant` key applies to every variant.
+
 Multiple key=value pairs are separated by ';'. The 'rows' key is parsed as an
-int and checked against the row count; every other key is checked against a
-column of the same name — in the *first* returned row (so it also works
-together with `rows` > 1 plus an `ORDER BY`/`TOP 1`, e.g. "15 rows, top one
-has contra_IBAN=...").
+int and checked against the row count; 'variant' is pulled out as its own
+field (see above); every other key is checked against a column of the same
+name — in the *first* returned row (so it also works together with `rows` > 1
+plus an `ORDER BY`/`TOP 1`, e.g. "15 rows, top one has contra_IBAN=...").
 
 Some fenced blocks contain more than one statement (e.g. an UPDATE followed
 by a SELECT that confirms it). For those, `rows`/column assertions are
@@ -43,7 +49,12 @@ MATERIAL_DIR = REPO_ROOT / "material"
 
 
 def parse_meta(meta: str) -> dict:
-    """Parse 'rows=1; first_name=Neil; last_name=Davis' into a dict."""
+    """Parse 'rows=1; first_name=Neil; last_name=Davis' into a dict.
+
+    'rows' is parsed as an int. 'variant' is kept as a plain string (its
+    caller pulls it out separately; see `extract`). Every other key is left
+    as a string, to be checked against a result column later.
+    """
     expected = {}
     if not meta:
         return expected
@@ -84,12 +95,16 @@ def extract(path: Path) -> list[dict]:
             sql_lines.append(lines[k])
             k += 1
 
+        expected = parse_meta(m.group("meta"))
+        variant = expected.pop("variant", None)
+
         tests.append({
             "file": str(path),
             "marker_line": marker_line,
             "sql_line": j + 2,  # first line of the query, 1-indexed
             "sql": "\n".join(sql_lines).strip(),
-            "expected": parse_meta(m.group("meta")),
+            "variant": variant,
+            "expected": expected,
         })
         i = k + 1
     return tests

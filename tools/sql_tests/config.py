@@ -59,6 +59,7 @@ class MssqlConfig:
 @dataclass
 class Config:
     backend: str
+    variant: Optional[str] = None
     sqlite: Optional[SqliteConfig] = None
     duckdb: Optional[DuckdbConfig] = None
     mssql: Optional[MssqlConfig] = None
@@ -73,6 +74,7 @@ def load_config() -> Config:
         load_dotenv_file(".env")
 
     backend = os.environ.get("SQLTEST_BACKEND", "sqlite").lower()
+    variant = _resolve_variant(backend)
 
     if backend == "sqlite":
         path = os.environ.get("SQLTEST_SQLITE_PATH")
@@ -81,7 +83,7 @@ def load_config() -> Config:
                 "sqlite backend needs a database file: set SQLTEST_SQLITE_PATH "
                 "(env var, .env file, or --sqlite-path)"
             )
-        return Config(backend="sqlite", sqlite=SqliteConfig(path=path))
+        return Config(backend="sqlite", variant=variant, sqlite=SqliteConfig(path=path))
 
     if backend == "duckdb":
         path = os.environ.get("SQLTEST_DUCKDB_PATH")
@@ -90,7 +92,7 @@ def load_config() -> Config:
                 "duckdb backend needs a database file: set SQLTEST_DUCKDB_PATH "
                 "(env var, .env file, or --duckdb-path)"
             )
-        return Config(backend="duckdb", duckdb=DuckdbConfig(path=path))
+        return Config(backend="duckdb", variant=variant, duckdb=DuckdbConfig(path=path))
 
     if backend == "mssql":
         required = {
@@ -106,6 +108,7 @@ def load_config() -> Config:
             )
         return Config(
             backend="mssql",
+            variant=variant,
             mssql=MssqlConfig(
                 host=os.environ.get("SQLTEST_MSSQL_HOST", "localhost"),
                 port=int(os.environ.get("SQLTEST_MSSQL_PORT", "1433")),
@@ -116,3 +119,24 @@ def load_config() -> Config:
         )
 
     raise ConfigError(f"unknown SQLTEST_BACKEND {backend!r}; expected 'sqlite', 'duckdb', or 'mssql'")
+
+
+_VARIANTS = ("mssql", "duckdb")
+
+
+def _resolve_variant(backend: str) -> Optional[str]:
+    """Which content variant's `<!-- sql-test: variant=... -->` markers to
+    run, alongside every marker with no `variant` key (those apply to any
+    variant). Defaults to matching the backend name for the 'mssql'/'duckdb'
+    backends; the 'sqlite' backend has no matching content variant, so it
+    defaults to running variant-less markers only. SQLTEST_VARIANT overrides
+    this explicitly either way (e.g. to run the DuckDB-flavored queries
+    against the sqlite backend).
+    """
+    raw = os.environ.get("SQLTEST_VARIANT")
+    if raw:
+        variant = raw.lower()
+        if variant not in _VARIANTS:
+            raise ConfigError(f"SQLTEST_VARIANT={raw!r} must be one of {_VARIANTS}")
+        return variant
+    return backend if backend in _VARIANTS else None

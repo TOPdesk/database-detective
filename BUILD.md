@@ -59,6 +59,13 @@ uv run python3 tools/run_sql_tests.py --backend duckdb --duckdb-path detective.d
 including how to test against MS SQL Server instead of SQLite (needs the
 optional `mssql` dependency group: `uv sync --extra mssql`).
 
+A marker can be tagged `<!-- sql-test: variant=duckdb; ... -->` (or
+`variant=mssql`) for lessons that have different SQL per `{% if variant ==
+... %}` branch (see "Building the MSSQL and DuckDB variants" above) — a
+marker with no `variant` key applies to both. `--variant` picks which one to
+run; it defaults to matching `--backend` for the duckdb/mssql backends, so
+`--backend mssql` naturally skips the duckdb-only markers and vice versa.
+
 Note that some of the workshop's own solutions are `UPDATE`/`INSERT`/`DELETE`
 statements that later exercises depend on, so tests run in marker order
 against one shared connection rather than each in isolation. This means the
