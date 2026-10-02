@@ -20,6 +20,24 @@ uv run mkdocs build
 # static files will be placed in the ./public directory
 ```
 
+## Building the MSSQL and DuckDB variants
+
+The workshop is written primarily for MS SQL Server, with DuckDB supported as
+an easier-to-install alternative. Both variants live in the same markdown
+files in `material/`, branching via `{% if variant == "duckdb" %} ... {% else
+%} ... {% endif %}` blocks (powered by
+[mkdocs-macros-plugin](https://mkdocs-macros-plugin.readthedocs.io/), wired up
+in `main.py`). Pick the variant with the `WORKSHOP_VARIANT` environment
+variable; it defaults to `mssql` when unset:
+
+```sh
+uv run mkdocs serve                           # preview the MSSQL variant (default)
+WORKSHOP_VARIANT=duckdb uv run mkdocs serve   # preview the DuckDB variant
+
+uv run mkdocs build --site-dir public-mssql
+WORKSHOP_VARIANT=duckdb uv run mkdocs build --site-dir public-duckdb
+```
+
 ## Testing the workshop's SQL
 
 The exercises' solution queries are annotated in the markdown with invisible

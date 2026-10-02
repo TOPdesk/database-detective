@@ -29,3 +29,8 @@ markdown_extensions:
   - pymdownx.superfences
 extra_css:
   - css/override.css
+
+plugins:
+  - search
+  - macros:
+      module_name: main

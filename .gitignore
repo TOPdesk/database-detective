@@ -40,3 +40,5 @@ __pycache__/
 
 # Generated site (with mkdocs)
 public
+public-mssql
+public-duckdb
