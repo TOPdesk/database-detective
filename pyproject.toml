@@ -5,6 +5,7 @@ description = "Database Detective: a beginner SQL workshop"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
+    "duckdb>=1.4.5",
     "mkdocs",
     "pymdown-extensions",
     "pytest",

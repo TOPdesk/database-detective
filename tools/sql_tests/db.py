@@ -100,6 +100,26 @@ class SqliteDatabase(Database):
             self.connection = None
 
 
+class DuckdbDatabase(Database):
+    """Connects via the `duckdb` package's DB-API-compatible interface."""
+
+    def __init__(self, path: str):
+        self.path = path
+        self.connection = None
+
+    def connect(self) -> None:
+        import duckdb
+        self.connection = duckdb.connect(self.path)
+
+    def _cursor(self):
+        return self.connection.cursor()
+
+    def close(self) -> None:
+        if self.connection is not None:
+            self.connection.close()
+            self.connection = None
+
+
 class MssqlDatabase(Database):
     """Connects via python-tds (import name `pytds`), a pure-Python TDS
     client — unlike pyodbc/pymssql it needs no ODBC driver or FreeTDS
@@ -145,6 +165,9 @@ def get_database(config: cfg.Config) -> Database:
     if config.backend == "sqlite":
         assert config.sqlite is not None
         return SqliteDatabase(config.sqlite.path)
+    if config.backend == "duckdb":
+        assert config.duckdb is not None
+        return DuckdbDatabase(config.duckdb.path)
     if config.backend == "mssql":
         assert config.mssql is not None
         m = config.mssql

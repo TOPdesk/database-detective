@@ -43,6 +43,11 @@ class SqliteConfig:
 
 
 @dataclass
+class DuckdbConfig:
+    path: str
+
+
+@dataclass
 class MssqlConfig:
     host: str
     port: int
@@ -55,6 +60,7 @@ class MssqlConfig:
 class Config:
     backend: str
     sqlite: Optional[SqliteConfig] = None
+    duckdb: Optional[DuckdbConfig] = None
     mssql: Optional[MssqlConfig] = None
 
 
@@ -76,6 +82,15 @@ def load_config() -> Config:
                 "(env var, .env file, or --sqlite-path)"
             )
         return Config(backend="sqlite", sqlite=SqliteConfig(path=path))
+
+    if backend == "duckdb":
+        path = os.environ.get("SQLTEST_DUCKDB_PATH")
+        if not path:
+            raise ConfigError(
+                "duckdb backend needs a database file: set SQLTEST_DUCKDB_PATH "
+                "(env var, .env file, or --duckdb-path)"
+            )
+        return Config(backend="duckdb", duckdb=DuckdbConfig(path=path))
 
     if backend == "mssql":
         required = {
@@ -100,4 +115,4 @@ def load_config() -> Config:
             ),
         )
 
-    raise ConfigError(f"unknown SQLTEST_BACKEND {backend!r}; expected 'sqlite' or 'mssql'")
+    raise ConfigError(f"unknown SQLTEST_BACKEND {backend!r}; expected 'sqlite', 'duckdb', or 'mssql'")

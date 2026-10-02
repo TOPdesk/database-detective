@@ -32,6 +32,7 @@ uv run python3 tools/extract_sql_tests.py
 
 # Actually run them against a live database and report pass/fail via pytest
 uv run python3 tools/run_sql_tests.py --backend sqlite --sqlite-path detective.db
+uv run python3 tools/run_sql_tests.py --backend duckdb --duckdb-path detective.duckdb
 ```
 
 `run_sql_tests.py` needs a database to connect to, configured via CLI flags
