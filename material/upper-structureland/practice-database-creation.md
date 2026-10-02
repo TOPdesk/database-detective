@@ -7,6 +7,48 @@ If you are on the fast track, read and execute the script in the Solution sectio
 
 **Hints**:
 
+{% if variant == "duckdb" %}
+* Define types.
+* DuckDB doesn't have an auto-incrementing column type. Instead, give the primary key type `UUID` with a default of `uuid()`, so a fresh random id is generated whenever a row is inserted without specifying one — the same approach used for `person_id` in the crime database you've been querying.
+* Use foreign keys to enforce relations between columns.
+* Define `NULL/NOT NULL` for the columns.
+* Many different solutions exist.
+
+* Use [shell.duckdb.org](https://shell.duckdb.org/)'s table list to check you achieved what you wanted. Table creation or any modification on the structure cannot be undone, but you can drop a table and recreate it anytime, if you always save your work into an sql file.
+
+<details>
+<summary>Solution</summary>
+
+<!-- sql-test: variant=duckdb -->
+```sql
+CREATE TABLE person(
+id UUID PRIMARY KEY DEFAULT uuid(),
+first_name TEXT NULL,
+last_name TEXT NULL,
+date_of_birth DATE NULL);
+
+CREATE TABLE sample(
+id UUID PRIMARY KEY DEFAULT uuid(),
+place_collected TEXT NULL,
+time_collected DATETIME NULL,
+person_id UUID NULL,
+CONSTRAINT fk_sample_person FOREIGN KEY (person_id) REFERENCES person(id));
+
+CREATE TABLE locus(
+id UUID PRIMARY KEY DEFAULT uuid(),
+name TEXT NOT NULL,
+CONSTRAINT locus_name_unique UNIQUE (name));
+
+CREATE TABLE peak(
+id UUID PRIMARY KEY DEFAULT uuid(),
+locus_id UUID NOT NULL,
+sample_id UUID NOT NULL,
+value INT NOT NULL,
+CONSTRAINT fk_peak_locus FOREIGN KEY (locus_id) REFERENCES locus(id),
+CONSTRAINT fk_peak_sample FOREIGN KEY (sample_id) REFERENCES sample(id));
+```
+</details>
+{% else %}
 * Define types.
 * A primary key is commonly defined as `INT` (auto-incremented during an insert by the database), or a `UNIQUEIDENTIFIER`. An auto-incremented int can be built up by the `IDENTITY` keyword. `UNIQUEIDENTIFIER` can be defaulted by using the embedded function `NEWID()`, which returns a random uuid.
 * Use foreign keys to enforce relations between columns.
@@ -19,7 +61,7 @@ If you are on the fast track, read and execute the script in the Solution sectio
 <details>
 <summary>Solution</summary>
 
-<!-- sql-test -->
+<!-- sql-test: variant=mssql -->
 ```sql
 CREATE TABLE person(
 id INT IDENTITY NOT NULL,
@@ -52,6 +94,7 @@ CONSTRAINT fk_peak_sample FOREIGN KEY (sample_id) REFERENCES sample(id),
 CONSTRAINT pk_peak_id PRIMARY KEY (id))
 ```
 </details>
+{% endif %}
 
 <!-- blank line -->
 ----
@@ -61,6 +104,11 @@ CONSTRAINT pk_peak_id PRIMARY KEY (id))
 
 **Hints**:
 
+{% if variant == "duckdb" %}
+* Use [DuckDB's web shell](https://shell.duckdb.org/) — the same tool you used to connect to the crime database — to inspect the tables you just created.
+* If your client doesn't generate an entity-relationship diagram automatically, export the schema and use a separate diagramming tool.
+{% else %}
 * MS SQL offers a visual editor for this (can be generated from the existing tables): expand your database in Object explorer on the left, right click on Database Diagrams (click Yes if it's asking for permission), click on New Database Diagram. Select all your tables.
 * A diagram is generated. Tables can be moved manually, and it can be configured what kind of data to show on it. 
 * If you receive an error saying 'Could not obtain information about Windows NT group/user ..., error code 0x54b. (Microsoft SQL Server, Error: 15404)', then you bumped into a known issue with SQL Server. The reason is that for creating diagrams, the database owner must be a static user of the database, and cannot be a user logged in with Windows authentication. The workaround is: right click on the name of your database in Object Explorer, Properties, Files page on the left, set the owner by clicking on ... at end of the line, Browse..., and choose a normal user (which is not NT or ##MS, but can be sa on your own server), Ok, Ok, Ok. This can be changed back once you are not working with the diagrams anymore.
+{% endif %}
