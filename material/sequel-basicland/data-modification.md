@@ -12,6 +12,9 @@ saved copy of the database in a file, which can be used to restore (put back) th
 
 **Hints**:
 
+{% if variant == "duckdb" %}
+* Since you're working from the `.duckdb` file you downloaded in [Connect to your database](../intro-street/connect-to-your-database.md), the simplest backup is to just keep that original file untouched somewhere — if you ever need to restore, you can re-open it in the DuckDB shell. (If you're running DuckDB locally instead of in the browser, this is equivalent to copying the `*.duckdb` file to another file, e.g. `*_backup.duckdb`, and copying it back over the original to restore.)
+{% else %}
 * Right click on the database you want to save, and click on Tasks -> Backup. Default settings are proper in most cases (full backup).
 
 <details>
@@ -21,6 +24,7 @@ saved copy of the database in a file, which can be used to restore (put back) th
 </p>
 </details>
 <br />
+{% endif %}
 
 <!-- blank line -->
 ----
@@ -39,7 +43,11 @@ saved copy of the database in a file, which can be used to restore (put back) th
 * `WHERE` condition is especially important for updates: it works without conditions as well: updates all fields! Most of the time this is not what you want.
 * Format of the `WHERE` condition is the same as in a `SELECT`. 
 * In Basicland we go with the default *transaction* setting. It means that every query you run, takes effect immediately in the database, and cannot be reverted. This setting can be changed, but unnecessary for now.
+{% if variant == "duckdb" %}
+* See examples in the [DuckDB documentation](https://duckdb.org/docs/), or in Google.
+{% else %}
 * See examples [here](https://wiki.topdesk.com/wiki/Example_codes_in_MS_SQL), or in Google.
+{% endif %}
 * To check it, use a select query with the same where condition.
 
 <details>
@@ -49,7 +57,7 @@ saved copy of the database in a file, which can be used to restore (put back) th
 ```sql
 UPDATE person
 SET hair = 'Black'
-WHERE first_name = 'Kira' AND last_name = 'Murray'
+WHERE first_name = 'Kira' AND last_name = 'Murray';
 
 SELECT * FROM person
 WHERE first_name = 'Kira' AND last_name = 'Murray'
@@ -62,7 +70,7 @@ WHERE first_name = 'Kira' AND last_name = 'Murray'
 <!-- blank line -->
 
 **Exercise 3a**: Hans Klein and Cindy Klein are a brother and a sister, and they changed 
-their last names to Kleiner. Database guys are sitting in front of their SQL Server Management Studio,
+their last names to Kleiner. Database guys are sitting in front of their SQL client,
 and want to do the change in the database.
 
 In this exercise, do it in 3 steps, so that you see what's going on:
@@ -83,11 +91,11 @@ In this exercise, do it in 3 steps, so that you see what's going on:
 ```sql
 SELECT * FROM person
 WHERE (first_name = 'Hans'
-OR first_name = 'Cindy') AND last_name = 'Klein'
+OR first_name = 'Cindy') AND last_name = 'Klein';
 
 UPDATE person
 SET last_name = 'Kleiner'
-WHERE person_id IN ('398E6049-79CB-5B4E-9B36-E8C685E8543B', '73CFED84-EEF9-864F-BBC2-51D1A1C0B897')
+WHERE person_id IN ('398E6049-79CB-5B4E-9B36-E8C685E8543B', '73CFED84-EEF9-864F-BBC2-51D1A1C0B897');
 
 SELECT * FROM person
 WHERE person_id IN ('398E6049-79CB-5B4E-9B36-E8C685E8543B', '73CFED84-EEF9-864F-BBC2-51D1A1C0B897')
@@ -129,7 +137,7 @@ WHERE (first_name = 'Hans' OR first_name = 'Cindy') AND last_name = 'Klein';
 
 | **Note**    |
 | ----------- |
-|When you do the same update from an application (like in a cleanstep in TOPdesk), then performance becomes an issue. If you did a select first, and then an update, the intermediate result set can be huge in the memory in case of a lot of records. Furthermore, SQL Server cannot do much optimization with 2 queries. It's a good practice to do that in one single query.|
+|When you do the same update from an application (like in a cleanstep in TOPdesk), then performance becomes an issue. If you did a select first, and then an update, the intermediate result set can be huge in the memory in case of a lot of records. Furthermore, the database cannot do much optimization with 2 separate queries. It's a good practice to do that in one single query.|
 
 <!-- blank line -->
 ----
@@ -151,8 +159,12 @@ INSERT INTO tablename (column1, column2, ...)
 ```
 * A date can be inserted in a format like '1900-01-01'
 * Every mandatory field has to be added, otherwise database will throw an error. Experiment with it.
+{% if variant == "duckdb" %}
+* You can generate random UUIDs using the function `uuid()` for the person_id.
+{% else %}
 * You can generate random UUIDs using the function NEWID() for the person_id.
 * cluster_id is a special column: it is mandatory, but the database will set it, as it's constructed that way. This will be explained in depth in Structureland.
+{% endif %}
 * You can create the two rows with 2 separate insert statement or by just 1 combined insert:
 ```sql
 INSERT INTO tablename (column1, column2, ...) VALUES
@@ -163,24 +175,43 @@ INSERT INTO tablename (column1, column2, ...) VALUES
 <details>
 <summary>Solution 1</summary>
 
-<!-- sql-test -->
+{% if variant == "duckdb" %}
+<!-- sql-test: variant=duckdb -->
 ```sql
 INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth)
-  VALUES (NEWID(), 'Otto', 'Herz', 112, '1988-02-19')
+  VALUES (uuid(), 'Otto', 'Herz', 112, '1988-02-19');
+INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth, shoe_size)
+  VALUES (uuid(), 'Kathie', 'Herz', 64, '1989-12-29', 39)
+```
+{% else %}
+<!-- sql-test: variant=mssql -->
+```sql
+INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth)
+  VALUES (NEWID(), 'Otto', 'Herz', 112, '1988-02-19');
 INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth, shoe_size)
   VALUES (NEWID(), 'Kathie', 'Herz', 64, '1989-12-29', 39)
 ```
+{% endif %}
 </details>
 
 <details>
 <summary>Solution 2</summary>
 
-<!-- sql-test -->
+Note: this is an alternative to Solution 1 above, not a continuation of it — running both would insert Otto and Kathie twice.
+
+{% if variant == "duckdb" %}
+```sql
+INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth, shoe_size) VALUES
+  (uuid(), 'Otto', 'Herz', 112, '1988-02-19', NULL),
+  (uuid(), 'Kathie', 'Herz', 64, '1989-12-29', 39)
+```
+{% else %}
 ```sql
 INSERT INTO person (person_id, first_name, last_name, weight_kg, date_of_birth, shoe_size) VALUES
   (NEWID(), 'Otto', 'Herz', 112, '1988-02-19', NULL),
   (NEWID(), 'Kathie', 'Herz', 64, '1989-12-29', 39)
 ```
+{% endif %}
 </details>
 <br />
 
@@ -264,6 +295,9 @@ WHERE (first_name = 'Otto' AND last_name = 'Herz')
 
 **Hints**:
 
+{% if variant == "duckdb" %}
+* In the DuckDB shell, open the original file that you downloaded in the Connect to your Database section again, instead of the one you've been modifying.
+{% else %}
 * Right click on the database you want to restore, and click on Tasks -> Restore -> Database. Default settings are proper in most cases (Query windows can not be opened during the restore process).
 * In case of error, you can check the error message in the bottom left corner. If it says there are open connections to the database, disconnect your own session(s) from it. You can do it by changing current database in the top left corner to master in your Query window(s).
 * If it still doesn't allow restoring, it might be because of some lingering connections. Normally you should check who is connected to the database, but this time - as this is your own database - it doesn't hurt to kick out everyone else. You can do that on the Options page by enabling Close existing connections.
@@ -275,4 +309,5 @@ WHERE (first_name = 'Otto' AND last_name = 'Herz')
 <img src="images/restore-database.png" alt="Restore database"/>
 </p>
 </details>
+{% endif %}
 
