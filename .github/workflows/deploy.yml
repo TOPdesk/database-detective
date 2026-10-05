@@ -28,7 +28,7 @@ jobs:
         run: uv sync
 
       - name: Build site
-        run: uv run mkdocs build
+        run: WORKSHOP_VARIANT=duckdb uv run mkdocs build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
